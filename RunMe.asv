@@ -21,7 +21,7 @@ plotWork = 0;
 % Simbol Data:
 SimbSize = 921;     % mm
 SimbRad  = 51;      % mm
-CutRad   = 69;      % mm 69
+CutRad   = 69;      % mm
 ShiftLen = 45;      % mm
 RollAdd  = 24;      % mm
 CutAdd   = 12;   % mm
@@ -178,7 +178,6 @@ thetaAdA = linspace(30+alf,30);
 line(AdR*cosd(thetaAdA)+AdC(1),AdR*sind(thetaAdA)+AdC(2),'Color','red');
 
 thetaACut = linspace(150+alf,270-alf);   % Ends of radius A
-
 thetaBCut = linspace(-90+alf,30-alf);      % Ends of radius B
 thetaCCut = linspace(30+alf,150-alf);     % Ends of radius C
 
@@ -204,22 +203,16 @@ dddx = 2*CutRad*sind(alf/2)*cosd(alf/2);
 dddy = 2*CutRad*sind(alf/2)*sind(alf/2);
 dddx60 = 2*CutRad*sind(alf/2)*cosd(alf/2+60); 
 dddy60 = 2*CutRad*sind(alf/2)*sind(alf/2+60);
-dddxC = 2*CutRad*sind(alf/2)*cosd(60-alf/2);
-dddyC = 2*CutRad*sind(alf/2)*sind(60-alf/2);
 
 TranzA12 = [RlA(1)-dddx RlA(2)-CutRad+dddy];
-TranzA21 = [RlA(1)-CutRad*cosd(30)-dddx60 RlA(2)+CutRad*sind(30)-dddy60];
-TranzB12 = [RlB(1)+dddx RlB(2)-CutRad+dddy];
-TranzB21 = [RlB(1)+CutRad*cosd(30)+dddx60 RlB(2)+CutRad*sind(30)-dddy60];
-TranzC12 = [RlC(1)+CutRad*cosd(30)-dddxC RlC(2)+CutRad*sind(30)+dddyC];
-TranzC21 = [RlC(1)-CutRad*cosd(30)+dddxC RlC(2)+CutRad*sind(30)+dddyC];
+TranzA22 = [RlA(1)-dddx60 RlA(2)-CutRad+dddy60];
 
-line([TranzA12(1) TranzA11(1)],[TranzA12(2) TranzA11(2)],'Color','red');                      % ! Draw line AB
-line([TranzA21(1) TranzA22(1)],[TranzA21(2) TranzA22(2)],'Color','red');                      % ! Draw line AB
-line([TranzB12(1) TranzB11(1)],[TranzB12(2) TranzB11(2)],'Color','red');                      % ! Draw line AB
-line([TranzB21(1) TranzB22(1)],[TranzB21(2) TranzB22(2)],'Color','red');                      % ! Draw line AB
-line([TranzC12(1) TranzC11(1)],[TranzC12(2) TranzC11(2)],'Color','green');                      % ! Draw line AB
-line([TranzC21(1) TranzC22(1)],[TranzC21(2) TranzC22(2)],'Color','green');                      % ! Draw line AB
+line([TranzA12(1) TranzA11(1)],[TranzA12(2) TranzA11(2)],'Color','green');                      % ! Draw line AB
+line([0 TranzA22(1)],[0 TranzA22(2)],'Color','red');                      % ! Draw line AB
+line([0 TranzB11(1)],[0 TranzB11(2)],'Color','red');                      % ! Draw line AB
+line([0 TranzB22(1)],[0 TranzB22(2)],'Color','red');                      % ! Draw line AB
+line([0 TranzC11(1)],[0 TranzC11(2)],'Color','red');                      % ! Draw line AB
+line([0 TranzC22(1)],[0 TranzC22(2)],'Color','red');                      % ! Draw line AB
 
 
 BarCur=BarCur + 1;                                              % Increment bar line
