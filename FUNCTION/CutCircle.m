@@ -40,7 +40,7 @@ function [Bang,Ax,Ay,Bx,By] = CutCircle(ang,a,r,L,out,alf,opi,d,BangInvert)
     if (out == 0)
         Cr = L-r;
     elseif(out == 1)
-        Cr = L+r;
+        Cr = L+r; 
         if(Cy<0)
             Cy=Cy*(-1);
         end
