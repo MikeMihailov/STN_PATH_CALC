@@ -1,4 +1,4 @@
-function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = Triangle_Angle_Small(Size,R,L,dAlfa,Str,CnR,R2,Size2,alf,shift,Ot,Rt,hTranz)
+function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = Triangle_Angle_Small(Size,R,L,dAlfa,Str,R2,Size2,alf,shift,Ot,Rt,hTranz,AdOO,AdR)
 %***************************************************************
 %**************************DEBUG********************************
 %***************************************************************
@@ -134,17 +134,19 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 
+
+
+
+
+
 %Tranzit radius
 st_d = en_d;
 en_d = st_d + TranzitAngleRange - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1,  -60, 0,  0, 1);
     Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 %********************STREGHT PART 9->10**************************   
 st_d = en_d;

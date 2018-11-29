@@ -158,10 +158,11 @@ line([CtB2(1) CtC1(1)],[CtB2(2) CtC1(2)]);                      % ! Draw line BC
 line([CtC2(1) CtA2(1)],[CtC2(2) CtA2(2)]);                      % ! Draw line AC
 
 % Tranzaction radius parametrs:
-AdA = [RlA(1)+ShiftLen RlA(2)+ShiftLen*tand(30)];
-AdB = [RlB(1)-ShiftLen RlB(2)+ShiftLen*tand(30)];
-AdC = [RlC(1) RlC(2)-ShiftLen/sind(60)];
-AdR = AdB(2) - CtB1(2);
+AdA  = [RlA(1)+ShiftLen RlA(2)+ShiftLen*tand(30)];
+AdB  = [RlB(1)-ShiftLen RlB(2)+ShiftLen*tand(30)];
+AdC  = [RlC(1) RlC(2)-ShiftLen/sind(60)];
+AdR  = AdB(2) - CtB1(2);
+AdOO = sqrt(AdA(1)*AdA(1)+AdA(2)*AdA(2));
 
 xxx = (ShiftLen/sind(60)*CutRad)/(AdR-CutRad);
 alf = 60 - acosd(CutRad/xxx);
@@ -249,7 +250,6 @@ LoadBar(BarMax,BarCur);                                         % Show current b
 %***************************************************************
 %  First cut contain side cut and angle cut.
 %************************SIDE***********************************
-%FCS_r  = CutAdd/(1-cosd(CutInputAng));  % Calc radius of side cut
 FCS_r  = CutAdd/(1-cosd(CutInputAng));  % Calc radius of side cut
 %***********************ANGLE***********************************
 tetta  = 60-CutInputAng;
@@ -471,7 +471,7 @@ LoadBar(BarMax,BarCur);
 %**************************************************************************
 
 CurAng = CurAng - 1;
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),1,SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz,AdOO,AdR);
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
