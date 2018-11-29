@@ -26,12 +26,12 @@ SimbRad  = 51;      % mm
 CutRad   = 69;      % mm 69
 ShiftLen = 45;      % mm
 RollAdd  = 24;      % mm24
-CutAdd   = 12;   % mm
+CutAdd   = 12;      % mm
 % Machine Data:
 L  = 401;           % From center of carriet to end of scissors(было 512)
 LR = 307;           % Carriage lenhth, mm (last - 339)
 % Cut Tech Proc Data:
-CutInputAng = 30;   % grad
+CutInputAng = 10;   % grad
 CutLagAng   = 1;    % grad
 MinCutRad   = 45;   % mm (45)
 % Calc Data:
@@ -92,6 +92,7 @@ BlankSize = SimbSize+2*s3*(RollAdd+CutAdd); % Size of blank, mm
 %CutRad    = SimbRad + RollAdd;             % Radius of simbol after cut, mm
 BisxRoll  = (SimbSize/s3)-SimbRad;          % Distance on bisector from centor of simbol to top of roll radius
 BisxCut   = BisxRoll + CutRad - SimbRad;    % Distance on bisector from centor of simbol to top of cut radius
+%BisxCut   = BisxRoll + RollAdd;             % Distance on bisector from centor of simbol to top of cut radius
 BisxBlank = BlankSize/s3;                   % Distance on bisector from centor of simbol to coner of blank
 Blank_h   = BlankSize*(s3/6);               % 1/3 of blank height
 Blank_H   = Blank_h*3;                      % Blank height
@@ -253,6 +254,7 @@ LoadBar(BarMax,BarCur);                                         % Show current b
 FCS_r  = CutAdd/(1-cosd(CutInputAng));  % Calc radius of side cut
 %***********************ANGLE***********************************
 tetta  = 60-CutInputAng;
+te = SimbRad+RollAdd+2*CutAdd;
 FCA_r  = (SimbRad+RollAdd+2*CutAdd)/(sind(tetta)*s3+cosd(tetta)-1);
 FCA_or = BisxCut-FCA_r;
 FCA_dx = FCA_or*cosd(30);
@@ -494,7 +496,7 @@ for i = 1:1:CurAng-1
     xx(i)  = rhi(i)*cosd(rho(i));
     yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 0)
+if (plotWork == 1)
     line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
 end
 BarCur = BarCur + 1;
@@ -506,7 +508,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 0)
+if (plotWork == 1)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;

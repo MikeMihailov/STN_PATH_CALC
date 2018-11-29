@@ -134,32 +134,14 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 
-
-
-
-
-
 %Tranzit radius
 st_d = en_d;
 en_d = st_d + TranzitAngleRange - dAlfa;
 for ang = st_d:dAlfa:en_d
-    
     Betta(CurAng) = ang;
-    %
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L,1,60,0,0,0);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1,  -60, 0,  0, 1);
     Simb(CurAng) = 1;
     CurAng = CurAng + 1;
-    
-    
-    %{
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
-    Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
-    %}
 end
 %********************STREGHT PART 9->10**************************   
 st_d = en_d;
@@ -197,13 +179,10 @@ end
 st_d = HalfStreghtAngleRange;
 en_d = st_d + TranzitAngleRange - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1, 60, 0,  0, 0);
     Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 
 % Tranzit Line
@@ -222,17 +201,23 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 
-temp = (TriangleRenge(3) - TriangleRenge(2))/2;
-for ang = (TranzitAngleRange+TranzitAngleRange+dAlfa-2024*dAlfa):dAlfa:temp
+temp = (TriangleRenge(3) - TriangleRenge(2))/2-( TranzitAngleRange+LineAngRange);
+temp1 = TranzitAngleRange+LineAngRange+dAlfa;
+for ang = 0:dAlfa:temp   %-2024*dAlfa
+    %{
     Ax(CurAng) = M * cosd(temp-ang);
     Ay(CurAng) = M * sind(temp-ang);
     By(CurAng) = 0;
     buf        = sqrt(Ax(CurAng) * Ax(CurAng) - M*M + (L+R)*(L+R));
     Bx(CurAng) = Ax(CurAng) + buf;
+    %}
+    Cx = M * cosd(30-ang);
+    By(CurAng) = 0;
+    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng) = Cx + buf;
     
     Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
-    kuz           = L*cosd(Betta(CurAng));
-    Ax(CurAng)    = Bx(CurAng) - kuz;
+    Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
     Ay(CurAng)    = L*sind(Betta(CurAng));
     Bang(CurAng)  = asind(Ay(CurAng)/L);
     Simb(CurAng)  = 1;
@@ -275,13 +260,10 @@ end
 st_d = en_d - dAlfa;
 en_d = st_d + TranzitAngleRange;
 for ang = st_d:dAlfa:en_d
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1,  60, 0,  0, 1);
     Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 %********************STREGHT PART 3->4**************************
 %CurAng = 154660;
@@ -314,13 +296,10 @@ end
 st_d = HalfStreghtAngleRange;
 en_d = st_d + TranzitAngleRange - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
+Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1,  60, 0,  0, 0);
     Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 
 % Tranzit Line
@@ -396,13 +375,10 @@ end
 st_d = en_d - dAlfa;
 en_d = st_d + TranzitAngleRange;
 for ang = st_d:dAlfa:en_d
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
+Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1,  120, 0,  0, 1);
     Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 %********************STREGHT PART 6->7**************************
 buf = TriangleRenge(7)-TriangleRenge(6);
@@ -434,13 +410,10 @@ end
 st_d = HalfStreghtAngleRange;
 en_d = st_d + TranzitAngleRange - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Bang(CurAng) =  0;
-    Bx(CurAng)   =  0;
-    By(CurAng)   = 0;
-    Ax(CurAng)   =  0;
-    Ay(CurAng)   =  0;
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,AdR,L, 1,  60, 0,  0, 0);
     Simb(CurAng) = 1;
-    CurAng       = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 
 % Tranzit Line

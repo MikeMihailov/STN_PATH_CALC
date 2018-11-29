@@ -26,7 +26,7 @@ SimbRad  = 51;      % mm
 CutRad   = 69;      % mm 69
 ShiftLen = 45;      % mm
 RollAdd  = 24;      % mm24
-CutAdd   = 12;   % mm
+CutAdd   = 12;      % mm
 % Machine Data:
 L  = 401;           % From center of carriet to end of scissors(было 512)
 LR = 307;           % Carriage lenhth, mm (last - 339)
@@ -158,10 +158,11 @@ line([CtB2(1) CtC1(1)],[CtB2(2) CtC1(2)]);                      % ! Draw line BC
 line([CtC2(1) CtA2(1)],[CtC2(2) CtA2(2)]);                      % ! Draw line AC
 
 % Tranzaction radius parametrs:
-AdA = [RlA(1)+ShiftLen RlA(2)+ShiftLen*tand(30)];
-AdB = [RlB(1)-ShiftLen RlB(2)+ShiftLen*tand(30)];
-AdC = [RlC(1) RlC(2)-ShiftLen/sind(60)];
-AdR = AdB(2) - CtB1(2);
+AdA  = [RlA(1)+ShiftLen RlA(2)+ShiftLen*tand(30)];
+AdB  = [RlB(1)-ShiftLen RlB(2)+ShiftLen*tand(30)];
+AdC  = [RlC(1) RlC(2)-ShiftLen/sind(60)];
+AdR  = AdB(2) - CtB1(2);
+AdOO = sqrt(AdA(1)*AdA(1)+AdA(2)*AdA(2));
 
 xxx = (ShiftLen/sind(60)*CutRad)/(AdR-CutRad);
 alf = 60 - acosd(CutRad/xxx);
@@ -222,6 +223,17 @@ line([TranzB21(1) TranzB22(1)],[TranzB21(2) TranzB22(2)],'Color','green');      
 line([TranzC12(1) TranzC11(1)],[TranzC12(2) TranzC11(2)],'Color','green');                      % ! Draw line AB
 line([TranzC21(1) TranzC22(1)],[TranzC21(2) TranzC22(2)],'Color','green');                      % ! Draw line AB
 
+x1 = TranzA12(1);
+x2 = TranzA11(1);
+
+y1 = TranzA12(2);
+y2 = TranzA11(2);
+
+a = (y2-y1)/(x2-x1);
+b = y1-a*x1;
+
+
+hTranz = sqrt((b*b)/(a*a+1));
 
 BarCur=BarCur + 1;                                              % Increment bar line
 LoadBar(BarMax,BarCur);                                         % Show current bar line
@@ -238,7 +250,6 @@ LoadBar(BarMax,BarCur);                                         % Show current b
 %***************************************************************
 %  First cut contain side cut and angle cut.
 %************************SIDE***********************************
-%FCS_r  = CutAdd/(1-cosd(CutInputAng));  % Calc radius of side cut
 FCS_r  = CutAdd/(1-cosd(CutInputAng));  % Calc radius of side cut
 %***********************ANGLE***********************************
 tetta  = 60-CutInputAng;
@@ -460,7 +471,7 @@ LoadBar(BarMax,BarCur);
 %**************************************************************************
 
 CurAng = CurAng - 1;
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),1,SimbRad,SimbSize,alf,ShiftLen,AdB,AdR);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz,AdOO,AdR);
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
@@ -483,8 +494,8 @@ for i = 1:1:CurAng-1
     xx(i)  = rhi(i)*cosd(rho(i));
     yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 0)
-    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k',,'Marker','square');
+if (plotWork == 1)
+    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
 end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
@@ -496,7 +507,7 @@ for i = 1:1:CurAng-1
    yy(i)  = rhi(i)*sind(rho(i));
 end
 if (plotWork == 1)
-    line(xx(1:CurAng-1),yy(1:CurAng-1));
+    line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
