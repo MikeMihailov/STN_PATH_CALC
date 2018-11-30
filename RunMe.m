@@ -17,7 +17,7 @@ subplot(1,1,1);     % make new sub plot window
 plotWork = 0;
 DebugPlot = 0;
 PlotFirstCutTest = 1;
-PlotData = 1;
+PlotData = 0;
 %***************************************************************
 %**************************INPUT********************************
 %***************************************************************
@@ -74,6 +74,10 @@ TR_Bx   = 0:1:(nTriAlfa-dAlfa); % Buffer for Bx
 TR_By   = 0:1:(nTriAlfa-dAlfa); % Buffer for By
 TR_Alfa = 0:1:(nTriAlfa-dAlfa); % Buffer for Alfa
 TR_End  = 0;                    % End of bufer calculations
+
+TR_ExtremumsNumber = 6;
+TR_Extremums = 1:1:TR_ExtremumsNumber;           % Array of extremums
+TR_SpeedPoints = 1:1:2*TR_ExtremumsNumber;
 %***************************************************************
 %************************OUTPUT*********************************
 %***************************************************************
@@ -600,21 +604,13 @@ BarCur=BarCur + 1;
 LoadBar(BarMax,BarCur);
 
 
-if PlotData == 1
-    subplot(1,1,1);
-    plot(Betta(1:CurAng-1), OUT_Bang(1:CurAng-1), Betta(1:CurAng-1), OUT_Bx(1:CurAng-1));
-    title(['Coordindte of A & B.']);
-    xlabel('Angle, grad');
-    ylabel('Coordindte, mm');
-    grid;
-    legend;
-end
+
 %***************************************************************
 %**********************CALC ROLL********************************
 %***************************************************************
 CurAng = 1;
 %TR_Bett
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle(SimbSize,SimbRad,LR,dAlfa,0,0);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim,TR_Extremums] = Triangle(SimbSize,SimbRad,LR,dAlfa,0,0);
 CurAng = TR_End;
 %***************************************************************
 %***********************PLOT ROLL*******************************
@@ -640,6 +636,17 @@ end
 line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
+
+if PlotData == 1
+    subplot(1,1,1);
+    plot(TR_Alfa(1:CurAng-1), TR_Bang(1:CurAng-1), TR_Alfa(1:CurAng-1), TR_Bx(1:CurAng-1));
+    title(['Coordindte of A & B.']);
+    xlabel('Angle, grad');
+    ylabel('Coordindte, mm');
+    grid;
+    legend;
+end
+
 %***************************************************************
 %***********************SAVE ROLL CAM***************************
 %***************************************************************
@@ -663,6 +670,22 @@ addpath([curdir '\FUNCTION']);    % Include folder with extra functions
 DotAcc  = 720;	% Delta dot in output
 WrightCamsToFile(TR_Bx,TR_Bang,TR_Alfa,'CAM_Bx_Roll.txt','CAM_Alfa_Roll.txt',TR_End,DotAcc);
 cd(curdir);
+
+%***********************
+% Speed Up/Down points^:
+delta = TR_Alfa(TR_End)/DotAcc;	% Numer of dots in output
+for i=1:1:TR_ExtremumsNumber
+    TR_SpeedPoints(2*i-1)=TR_Extremums(i)-17*delta;
+    TR_SpeedPoints(2*i)=TR_Extremums(i) + 7*delta;
+end
+cd([curdir '\OUTPUT']);
+file = fopen('RollExtremums.txt','w');
+fprintf(file,  '%3.4f \r\n',TR_SpeedPoints);
+fclose(file);
+cd(curdir);
+%***********************
+
+
 BarCur=BarCur + 1;
 LoadBar(BarMax,BarCur);
 %***************************************************************

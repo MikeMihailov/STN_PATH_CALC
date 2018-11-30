@@ -1,4 +1,4 @@
-function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = Triangle(Size,R,L,dAlfa,Str,CnR)
+function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb,Extremums] = Triangle(Size,R,L,dAlfa,Str,CnR)
 %***************************************************************
 %**************************DEBUG********************************
 %***************************************************************
@@ -21,6 +21,7 @@ DebugPlot = 0;  % 1 - plot data from function
 %Bang  - Angel move of carriage
 %Bx    - Line move of carriage
 %Alfa  - Angel grid
+%Extremums - array of extremums (alfa coordinate) (6 in)
 %***************************************************************
 %*************************INTERNAL******************************
 %***************************************************************
@@ -130,6 +131,7 @@ for ang = 0:dAlfa:HalfStreghtAngleRange
     CurAng        = CurAng + 1;
 end
 %********************ANGLE PART 2->3****************************
+Extremums(1) = Alfa(CurAng);
 temp = (TriangleRenge(3) - TriangleRenge(2))/2;
 for ang = dAlfa:dAlfa:temp
     Ax(CurAng) = M * cosd(temp-ang);
@@ -161,6 +163,7 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
+Extremums(2) = Alfa(CurAng);
 %********************STREGHT PART 3->4**************************
 buf = TriangleRenge(4)-TriangleRenge(3);
 for ang = 0:dAlfa:(HalfStreghtAngleRange-dAlfa)
@@ -187,6 +190,7 @@ for ang = 0:dAlfa:HalfStreghtAngleRange
     CurAng        = CurAng + 1;
 end
 %********************ANGLE PART 5->6****************************
+Extremums(3) = Alfa(CurAng);
 temp = (TriangleRenge(6) - TriangleRenge(5))/2;
 for ang = dAlfa:dAlfa:temp
     Ax(CurAng) = M * cosd(temp-ang);
@@ -220,6 +224,7 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
+Extremums(4) = Alfa(CurAng);
 %********************STREGHT PART 6->7**************************
 buf = TriangleRenge(7)-TriangleRenge(6);
 for ang = 0:dAlfa:(HalfStreghtAngleRange- dAlfa)
@@ -246,6 +251,7 @@ for ang = 0:dAlfa:HalfStreghtAngleRange
     CurAng        = CurAng + 1;
 end
 %********************ANGLE PART 8->9****************************
+Extremums(5) = Alfa(CurAng);
 temp = (TriangleRenge(9) - TriangleRenge(8))/2;
 for ang = dAlfa:dAlfa:temp
     Ax(CurAng) = M * cosd(temp-ang);
@@ -281,6 +287,7 @@ if (CnR == 0)
         Simb(CurAng) = 1;
         CurAng       = CurAng + 1;
     end
+    Extremums(6) = Alfa(CurAng);
     %********************STREGHT PART 9->10**************************
     buf = TriangleRenge(10)-TriangleRenge(9);
     for ang = 0:dAlfa:(HalfStreghtAngleRange- dAlfa)
