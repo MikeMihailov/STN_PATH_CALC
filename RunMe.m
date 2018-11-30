@@ -17,6 +17,7 @@ subplot(1,1,1);     % make new sub plot window
 plotWork = 0;
 DebugPlot = 0;
 PlotFirstCutTest = 1;
+PlotData = 1;
 %***************************************************************
 %**************************INPUT********************************
 %***************************************************************
@@ -24,14 +25,14 @@ PlotFirstCutTest = 1;
 SimbSize = 921;     % mm
 SimbRad  = 51;      % mm
 CutRad   = 69;      % mm 69
-ShiftLen = 45;      % mm
+ShiftLen = 200;      % mm
 RollAdd  = 24;      % mm24
 CutAdd   = 12;      % mm
 % Machine Data:
 L  = 401;           % From center of carriet to end of scissors(было 512)
 LR = 307;           % Carriage lenhth, mm (last - 339)
 % Cut Tech Proc Data:
-CutInputAng = 10;   % grad
+CutInputAng = 30;   % grad
 CutLagAng   = 1;    % grad
 MinCutRad   = 45;   % mm (45)
 % Calc Data:
@@ -253,9 +254,8 @@ LoadBar(BarMax,BarCur);                                         % Show current b
 %************************SIDE***********************************
 FCS_r  = CutAdd/(1-cosd(CutInputAng));  % Calc radius of side cut
 %***********************ANGLE***********************************
-tetta  = 60-CutInputAng;
-te = SimbRad+RollAdd+2*CutAdd;
-FCA_r  = (SimbRad+RollAdd+2*CutAdd)/(sind(tetta)*s3+cosd(tetta)-1);
+g      = Blank_h*2 - BisxCut;
+FCA_r  = g/(2*cosd(CutInputAng)-1);
 FCA_or = BisxCut-FCA_r;
 FCA_dx = FCA_or*cosd(30);
 FCA_dy = FCA_or*sind(30);
@@ -263,6 +263,7 @@ FCA_A  = [-FCA_dx -FCA_dy];
 FCA_B  = [FCA_dx  -FCA_dy];
 FCA_C  = [0 (BisxCut-FCA_r)];
 if (PlotFirstCutTest == 1)
+    tetta  = 60-CutInputAng;
     FCA_tA = linspace(150+CutInputAng,270-CutInputAng);
     FCA_tB = linspace(270+CutInputAng,390-CutInputAng);
     FCA_tC = linspace(30+CutInputAng,150-CutInputAng);
@@ -271,10 +272,17 @@ if (PlotFirstCutTest == 1)
     line(FCA_r*cosd(FCA_tC)+FCA_C(1),FCA_r*sind(FCA_tC)+FCA_C(2),'Color','red');
 end
 %***********************TRAVEL**********************************
+
+
 FCT_a  = FCA_r*2*sind(60-CutInputAng);
 FCT_xs = BlankSize/2 - FCT_a;
 FCT_r  = FCT_xs/cosd(90-CutInputAng);
 FCT_OO = FCT_r*sind(90-CutInputAng) - Blank_h + (CutRad - SimbRad)/3;
+
+
+FCT_a  = FCA_dx + FCA_r*sind(CutInputAng);
+FCT_r  = FCT_a/sind(CutInputAng);
+FCT_OO = FCT_a/tand(CutInputAng) - Blank_h;
 FCT_dx = FCT_OO*cosd(30);
 FCT_dy = FCT_OO*sind(30);
 FCT_A  = [FCT_dx  -FCT_dy];
@@ -311,16 +319,6 @@ LoadBar(BarMax,BarCur);
 %***************************************************************
 x = sqrt(L*L/(1+cotd(CutInputAng)*cotd(CutInputAng)));
 y = -cotd(CutInputAng)*sqrt(L*L/(1+cotd(CutInputAng)*cotd(CutInputAng)));
-%{
-if (CutType == 0)
-    Bx = x-FCT_b;
-    By = -Blank_h+y;
-    StartTableAng = atand(Bx/By);
-    StatrtCarAng  = atand(By/Bx) - atand((y)/(x));
-elseif (CutType == 1)
-    
-end
-%}
 %***************************************************************
 %******************RANGE CALCULATION****************************
 %***************************************************************
@@ -328,9 +326,14 @@ x1 = sqrt(L*L/(1+cotd(CutInputAng+60)*cotd(CutInputAng+60)));
 y1 = -cotd(CutInputAng+60)*sqrt(L*L/(1+cotd(CutInputAng+60)*cotd(CutInputAng+60)));
 FCA_stBx       = BlankSize/2-FCT_a+x;
 FCA_stBy       = -Blank_h+y;
-FCA_st_tb_ang  = -atand(FCA_stBx/FCA_stBy);
-FCA_st_cr_ang  = atand(FCA_stBx/FCA_stBy) + atand(y/x)+90;
-FCA_end_tb_ang = atand((BlankSize/2-FCT_a*cosd(60)+x1)/(Blank_h-FCT_a*sind(60)+y1));
+
+
+te1 = (L+FCT_r)*sind(CutInputAng);
+te2 = (L+FCT_r)*cosd(CutInputAng) - FCT_OO;
+Dy = sqrt(te2*te2 + te1*te1);
+FCA_st_tb_ang  = atand(te1/te2);
+FCA_st_cr_ang  = FCA_st_tb_ang - CutInputAng;
+FCA_end_tb_ang = acosd(FCT_dy/Dy);
 FCA_tb_ang = FCA_end_tb_ang - FCA_st_tb_ang;
 FCT_tb_ang = 60 - FCA_tb_ang/2;
 BarCur=BarCur + 1;
@@ -355,6 +358,7 @@ for ang = st_d:dAlfa:en_d
     DrawSim(CurAng) = 1;
     CurAng = CurAng + 1;
 end
+% Ok
 st_d    = ang + dAlfa;
 en_d    = FCA_end_tb_ang-dAlfa;
 ang_d   = 1;
@@ -375,7 +379,7 @@ LoadBar(BarMax,BarCur);
 
 
 %4,5,6 Trevel
-st_d    = ang + dAlfa;
+st_d    = en_d + dAlfa;
 en_d    = st_d + FCT_tb_ang;
 FCT_or  = sqrt(FCT_dx*FCT_dx+FCT_dy*FCT_dy);
 FCT_ang = atand(FCT_dy/FCT_dx);
@@ -496,7 +500,7 @@ for i = 1:1:CurAng-1
     xx(i)  = rhi(i)*cosd(rho(i));
     yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
 end
 BarCur = BarCur + 1;
@@ -508,7 +512,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
@@ -569,6 +573,10 @@ cd(curdir);
 %***************************************************************
 %*******************SAVE CUT TO CAM*****************************
 %***************************************************************
+
+
+
+
 norm_bx = OUT_Bx(1);
 norm_ba = OUT_Bang(1);
 norm_al = Betta(1);
@@ -590,6 +598,17 @@ WrightCamToFile(OUT_Table,Betta,'CAM_Table.txt',(CurAng-1),DotAcc);
 cd(curdir);
 BarCur=BarCur + 1;
 LoadBar(BarMax,BarCur);
+
+
+if PlotData == 1
+    subplot(1,1,1);
+    plot(Betta(1:CurAng-1), OUT_Bang(1:CurAng-1), Betta(1:CurAng-1), OUT_Bx(1:CurAng-1));
+    title(['Coordindte of A & B.']);
+    xlabel('Angle, grad');
+    ylabel('Coordindte, mm');
+    grid;
+    legend;
+end
 %***************************************************************
 %**********************CALC ROLL********************************
 %***************************************************************
@@ -606,7 +625,7 @@ for i = 1:1:CurAng-1
     xx(i)  = rhi(i)*cosd(rho(i));
     yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1),'color','green');
 end
 BarCur = BarCur + 1;
@@ -618,7 +637,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-%line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
+line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
 %***************************************************************
@@ -649,5 +668,7 @@ LoadBar(BarMax,BarCur);
 %***************************************************************
 %***************************************************************
 %***************************************************************
-EstTime = cputime - StartTime
+
+
+EstTime = cputime - StartTime;
 %h = msgbox('Operation Completed','Success');

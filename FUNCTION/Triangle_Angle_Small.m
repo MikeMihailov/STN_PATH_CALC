@@ -117,7 +117,7 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
-
+a = Bang(CurAng-1);
 % Tranzit Line
 st_d = en_d;
 en_d = st_d + LineAngRange - dAlfa;
@@ -130,6 +130,7 @@ for ang = st_d:dAlfa:en_d
     Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
     Betta(CurAng) = ang;
     Bang(CurAng)  = asind(Ay(CurAng)/L);
+    a = Bang(CurAng);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
