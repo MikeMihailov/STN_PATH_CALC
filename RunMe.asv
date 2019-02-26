@@ -25,11 +25,11 @@ PlotData = 0;
 SimbSize = 923;     % mm
 SimbRad  = 51;      % mm
 CutRad   = 68;      % mm 69
-ShiftLen = 20;      % mm
-RollAdd  = 20;      % mm24
+ShiftLen = 200;      % mm
+RollAdd  = 24;      % mm24
 CutAdd   = 12;      % mm
 % Machine Data:
-L  = 402;           % From center of carriet to end of scissors(было 512)
+L  = 401;           % From center of carriet to end of scissors(было 512)
 LR = 307;           % Carriage lenhth, mm (last - 339)
 % Cut Tech Proc Data:
 CutInputAng = 30;   % grad
@@ -94,8 +94,10 @@ h = (s3/6)*SimbSize;                        % 1/3 of height (from center to side
 H = h*3;                                    % Height, mm
 CutSimbSize = SimbSize+2*s3*RollAdd;        % Size of simbol after cut, mm
 BlankSize = SimbSize+2*s3*(RollAdd+CutAdd); % Size of blank, mm
+%CutRad    = SimbRad + RollAdd;             % Radius of simbol after cut, mm
 BisxRoll  = (SimbSize/s3)-SimbRad;          % Distance on bisector from centor of simbol to top of roll radius
 BisxCut   = BisxRoll + CutRad - SimbRad;    % Distance on bisector from centor of simbol to top of cut radius
+%BisxCut   = BisxRoll + RollAdd;             % Distance on bisector from centor of simbol to top of cut radius
 BisxBlank = BlankSize/s3;                   % Distance on bisector from centor of simbol to coner of blank
 Blank_h   = BlankSize*(s3/6);               % 1/3 of blank height
 Blank_H   = Blank_h*3;                      % Blank height
@@ -145,6 +147,8 @@ line([RlA1(1) RlB1(1)],[RlA1(2) RlB1(2)]);                      % Draw line AB
 line([RlB2(1) RlC1(1)],[RlB2(2) RlC1(2)]);                      % Draw line BC
 line([RlC2(1) RlA2(1)],[RlC2(2) RlA2(2)]);                      % Draw line AC
 %*************************CUT**********************************
+
+
 dx = RollAdd*s3/2;                                              % cut-roll delta x
 dy = RollAdd/2;                                                 % cut-roll delta 
 ddx = ShiftLen * sind(30);                                      % shift side for small radius tranzaction
