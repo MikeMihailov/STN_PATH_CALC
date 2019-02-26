@@ -14,7 +14,7 @@ StartTime = cputime;            % Start time megerment
 %***************************************************************
 clf;                % clear plot window
 subplot(1,1,1);     % make new sub plot window
-plotWork = 0;
+plotWork = 1;
 DebugPlot = 0;
 PlotFirstCutTest = 1;
 PlotData = 0;
@@ -518,52 +518,6 @@ end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
 %***************************************************************
-%*********************VELOCYTY CHART****************************
-%***************************************************************
-%{
-for i = 1:1:CurAng-1
-    VelChart(i) = 1;                    % 1 u/s - base master velocyty
-    TimeLine(i) = Betta(i)/SupMstVel;   % Time line for table angel
-end
-if (CutType == 0)
-	VelDot = 5;
-elseif(CutType == 1)
-    VelDot = 3;
-end
-MstAcc = 0.1;
-ttr = (MaxVel-LowVel)/MstAcc;
-Str  = MaxVel*ttr-MstAcc*ttr*ttr/2;    % length of velosity chenge 
-nStr = fix(Str/dAlfa);                 % nomber of points for Str
-
-for i=1:1:VelDot
-  for j=-nStr:1:0
-    VelAng = VelPoint(i) + j;
-    VelChart(VelAng) = (LowVel-MaxVel)*(nStr+j)/nStr + MaxVel;
-  end
-  for j=0:1:nStr
-    VelAng = VelPoint(i) + j;
-    VelChart(VelAng) = (MaxVel-LowVel)*j/nStr + LowVel;
-  end
-end
-
-BarCur = BarCur + 1;
-LoadBar(BarMax,BarCur);
-
-%***************************************************************
-%**********************CALC TABLE CAM***************************
-%***************************************************************
-OUT_Table(1) = VelChart(1)*TimeLine(1);
-for i = 2:1:CurAng-1
-    OUT_Table(i) = OUT_Table(i-1)+ VelChart(i)*(TimeLine(i)-TimeLine(i-1));
-end
-subplot(2,1,1);
-plot(VelChart(1:CurAng-1));
-grid;
-subplot(2,1,2);
-plot(OUT_Table(1:CurAng-1));
-grid;
-%}
-%***************************************************************
 %********************SAVE START COND****************************
 %***************************************************************
 cd([curdir '\OUTPUT']);
@@ -573,10 +527,6 @@ cd(curdir);
 %***************************************************************
 %*******************SAVE CUT TO CAM*****************************
 %***************************************************************
-
-
-
-
 norm_bx = OUT_Bx(1);
 norm_ba = OUT_Bang(1);
 norm_al = Betta(1);
@@ -598,9 +548,6 @@ WrightCamToFile(OUT_Table,Betta,'CAM_Table.txt',(CurAng-1),DotAcc);
 cd(curdir);
 BarCur=BarCur + 1;
 LoadBar(BarMax,BarCur);
-
-
-
 %***************************************************************
 %**********************CALC ROLL********************************
 %***************************************************************
@@ -629,7 +576,9 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
+if (plotWork == 0)
+    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
+end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
 
