@@ -24,7 +24,7 @@ PlotData = 0;
 % Simbol Data:
 SimbSize = 923;     % mm
 SimbRad  = 51;      % mm
-CutRad   = 68;      % mm 69
+CutRad   = 68;      % mm 68
 ShiftLen = 20;      % mm
 RollAdd  = 20;      % mm24
 CutAdd   = 12;      % mm
@@ -39,12 +39,6 @@ MinCutRad   = 45;   % mm (45)
 dAlfa   = 0.001;	% delta alfa
 DotAcc  = 200;      % Delta dot in output
 FullAng = 720;      % Full revolv of curve, grad
-% EXPEREMENTAL:
-% Driver data
-MstAcc    = 1;      % Master acceleration, u/s^2
-SupMstVel = 1;      % grad/sec
-LowVel    = 0.1;    % Low speed of tabel
-MaxVel    = 1;      % Max speed of tabel
 %***************************************************************
 %***********************INTERNAL********************************
 %***************************************************************
@@ -151,6 +145,7 @@ ddx = ShiftLen * sind(30);                                      % shift side for
 ddy = ShiftLen * cosd(30);                                      % shift side for small radius tranzaction
 CtA1 = [RlA(1)+ShiftLen (RlA1(2)-RollAdd)];                     % ! Left-down 
 CtB1 = [RlB(1)-ShiftLen (RlB1(2)-RollAdd)];                     % ! Right-down
+
 CtB2 = [RlB2(1)+dx-ddx RlB2(2)+dy+ddy];                         % ! Right-up
 CtC1 = [RlC1(1)+dx+ddx RlC1(2)+dy-ddy];                         % ! Top-right
 CtC2 = [RlC2(1)-dx-ddx RlC2(2)+dy-ddy];                         % ! Top-left
