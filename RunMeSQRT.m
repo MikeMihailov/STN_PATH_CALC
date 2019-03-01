@@ -31,7 +31,7 @@ RollAdd   = 22;      % mm
 CutRad    = 69;      % mm
 CutAdd    = 24;
 
-ShiftLen = 200;      % mm
+ShiftLen  = 20;       % mm
 
 
 % Machine Data:
@@ -68,6 +68,7 @@ OUT_Table = 0:dAlfa:(FullAng-dAlfa);   % Table CAM
 %***************************************************************
 %*********************MAIN DATA CALC****************************
 %***************************************************************
+s3 = sqrt(3);                               % Just sqrt of 3 =)
 CutSizeX   = SimbSizeX + RollAdd*2;
 CutSizeY   = SimbSizeY + RollAdd*2;
 
@@ -84,14 +85,14 @@ BlankSizeY = CutSizeY + CutAdd*2;     % length, mm
 %***************************************************************
 %*********************DRAW SIMBOL LINE**************************
 %***************************************************************
-%BLANK
+%**************************BLANK********************************
 dX = BlankSizeX/2;
 dY = BlankSizeY/2;
 line([ dX  dX],[ dY -dY],'Color','green');
 line([ dX -dX],[-dY -dY],'Color','green');
 line([-dX -dX],[ dY -dY],'Color','green');
 line([-dX  dX],[ dY  dY],'Color','green');
-%ROLL
+%**************************ROLL*********************************
 dX1 = SimbSizeX/2;
 dX2 = SimbSizeX/2-SimbRad;
 dY1 = SimbSizeY/2;
@@ -107,33 +108,98 @@ line([ dX2 -dX2],[-dY1 -dY1],'Color','blue');
 line([-dX1 -dX1],[ dY2 -dY2],'Color','blue');
 line([-dX2  dX2],[ dY1  dY1],'Color','blue');
 
-line(SimbRad*cosd(tO1)+dX2,SimbRad*sind(tO1)+dY2,'Color','blue');
-line(SimbRad*cosd(tO2)+dX2,SimbRad*sind(tO2)-dY2,'Color','blue');
-line(SimbRad*cosd(tO3)-dX2,SimbRad*sind(tO3)-dY2,'Color','blue');
-line(SimbRad*cosd(tO4)-dX2,SimbRad*sind(tO4)+dY2,'Color','blue');
+OaX = dX2;
+OaY = dY2;
 
-Otr = [ dX2  dY2];
-Odr = [ dX2 -dY2];
-Odl = [-dX2 -dY2];
-Otl = [-dX2  dY2];
-%CUT
+Otr = [ OaX  OaY];
+Odr = [ OaX -OaY];
+Odl = [-OaX -OaY];
+Otl = [-OaX  OaY];
+
+line(SimbRad*cosd(tO1)+Otr(1),SimbRad*sind(tO1)+Otr(2),'Color','blue');
+line(SimbRad*cosd(tO2)+Odr(1),SimbRad*sind(tO2)+Odr(2),'Color','blue');
+line(SimbRad*cosd(tO3)+Odl(1),SimbRad*sind(tO3)+Odl(2),'Color','blue');
+line(SimbRad*cosd(tO4)+Otl(1),SimbRad*sind(tO4)+Otl(2),'Color','blue');
+%*************************CUT************************************
+% Staright part
 dX1 = CutSizeX/2;
-dX2 = CutSizeX/2-CutRad;
-dY1 = CutSizeY/2;
-dY2 = CutSizeY/2-CutRad;
+dX2 = OaX-ShiftLen;    
+dY1 = CutSizeY/2;           
+dY2 = OaY-ShiftLen;
 
-line([ dX1  dX1],[ dY2 -dY2],'Color','red');
-line([ dX2 -dX2],[-dY1 -dY1],'Color','red');
-line([-dX1 -dX1],[ dY2 -dY2],'Color','red');
-line([-dX2  dX2],[ dY1  dY1],'Color','red');
+line([ dX1  dX1],[ dY2 -dY2],'Color','blue');
+line([ dX2 -dX2],[-dY1 -dY1],'Color','blue');
+line([-dX1 -dX1],[ dY2 -dY2],'Color','blue');
+line([-dX2  dX2],[ dY1  dY1],'Color','blue');
+% Tranzaction radius parametrs:
+OTRtr  = [ dX2  dY2];
+OTRdr  = [ dX2 -dY2];
+OTRdl  = [-dX2 -dY2];
+OTRtl  = [-dX2  dY2];
+TRR    = CutSizeX/2 - dX2;
+xxx    = (ShiftLen/sind(45)*CutRad)/(TRR-CutRad);
+TRalf  = 45 - acosd(CutRad/xxx);
+tTRtr1 = linspace(0,TRalf);
+tTRtr2 = linspace(90,90-TRalf);
+tTRdr1 = linspace(-TRalf,0);
+tTRdr2 = linspace(-90+TRalf,-90);
+tTRdl1 = linspace(180,180+TRalf);
+tTRdl2 = linspace(270,270-TRalf);
+tTRtl1 = linspace(180,180-TRalf);
+tTRtl2 = linspace(90,90+TRalf);
+line(TRR*cosd(tTRtr1) + OTRtr(1), TRR*sind(tTRtr1) + OTRtr(2),'Color','red');
+line(TRR*cosd(tTRtr2) + OTRtr(1), TRR*sind(tTRtr2) + OTRtr(2),'Color','red');
+line(TRR*cosd(tTRdr1) + OTRdr(1), TRR*sind(tTRdr1) + OTRdr(2),'Color','red');
+line(TRR*cosd(tTRdr2) + OTRdr(1), TRR*sind(tTRdr2) + OTRdr(2),'Color','red');
+line(TRR*cosd(tTRdl1) + OTRdl(1), TRR*sind(tTRdl1) + OTRdl(2),'Color','red');
+line(TRR*cosd(tTRdl2) + OTRdl(1), TRR*sind(tTRdl2) + OTRdl(2),'Color','red');
+line(TRR*cosd(tTRtl1) + OTRtl(1), TRR*sind(tTRtl1) + OTRtl(2),'Color','red');
+line(TRR*cosd(tTRtl2) + OTRtl(1), TRR*sind(tTRtl2) + OTRtl(2),'Color','red');
+% Cut radius
+tCUTtr = linspace(0+TRalf,90-TRalf);
+tCUTdr = linspace(-90+TRalf,0-TRalf);
+tCUTdl = linspace(-180+TRalf,-90-TRalf);
+tCUTtl = linspace(180-TRalf,90+TRalf);
+line(CutRad*cosd(tCUTtr)+Otr(1),CutRad*sind(tCUTtr)+Otr(2),'Color','blue');
+line(CutRad*cosd(tCUTdr)+Odr(1),CutRad*sind(tCUTdr)+Odr(2),'Color','blue');
+line(CutRad*cosd(tCUTdl)+Odl(1),CutRad*sind(tCUTdl)+Odl(2),'Color','blue');
+line(CutRad*cosd(tCUTtl)+Otl(1),CutRad*sind(tCUTtl)+Otl(2),'Color','blue');
+% Tranzaction line parametrs:
+dddy = TRR*(1-cosd(TRalf));
+dddx = sqrt(4*TRR*TRR*sind(TRalf/2)*sind(TRalf/2)-dddy*dddy); 
 
-line(CutRad*cosd(tO1)+Otr(1),CutRad*sind(tO1)+Otr(2),'Color','red');
-line(CutRad*cosd(tO2)+Odr(1),CutRad*sind(tO2)+Odr(2),'Color','red');
-line(CutRad*cosd(tO3)+Odl(1),CutRad*sind(tO3)+Odl(2),'Color','red');
-line(CutRad*cosd(tO4)+Otl(1),CutRad*sind(tO4)+Otl(2),'Color','red');
+TRd_tr11 = [dX2+dddx dY1-dddy];
+TRd_dr11 = [dX2+dddx -(dY1-dddy)];
+TRd_dl11 = [-(dX2+dddx) -(dY1-dddy)];
+TRd_tl11 = [-(dX2+dddx) dY1-dddy];
+
+dddx = (TRR-ShiftLen)*tand(TRalf) - ((TRR-ShiftLen)/cosd(TRalf)-CutRad)*sind(TRalf);
+dddy = (TRR-ShiftLen) - ((TRR-ShiftLen)/cosd(TRalf)-CutRad)*cosd(TRalf);
+
+TRd_tr12 = [Odr(1)+dddx -(Odr(2)-dddy)];
+TRd_dr12 = [Odr(1)+dddx Odr(2)-dddy];
+TRd_dl12 = [-(Odr(1)+dddx) Odr(2)-dddy];
+TRd_tl12 = [-(Odr(1)+dddx) -(Odr(2)-dddy)];
+
+line([TRd_tr12(1) TRd_tr11(1)],[TRd_tr12(2) TRd_tr11(2)],'Color','green'); 
+line([TRd_dr12(1) TRd_dr11(1)],[TRd_dr12(2) TRd_dr11(2)],'Color','green'); 
+line([TRd_dl12(1) TRd_dl11(1)],[TRd_dl12(2) TRd_dl11(2)],'Color','green'); 
+line([TRd_tl12(1) TRd_tl11(1)],[TRd_tl12(2) TRd_tl11(2)],'Color','green'); 
+
+line([TRd_tr12(2) TRd_tr11(2)],[TRd_tr12(1) TRd_tr11(1)],'Color','green'); 
+line([TRd_dr12(2) TRd_dr11(2)],[TRd_dr12(1) TRd_dr11(1)],'Color','green'); 
+line([TRd_dl12(2) TRd_dl11(2)],[TRd_dl12(1) TRd_dl11(1)],'Color','green'); 
+line([TRd_tl12(2) TRd_tl11(2)],[TRd_tl12(1) TRd_tl11(1)],'Color','green'); 
+%***************************************************************
+%***************************************************************
+%***************************************************************
 
 
 
 
 
+
+%***************************************************************
+%******************DRAW FIRST CUT LINE**************************
+%***************************************************************
 

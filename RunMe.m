@@ -145,7 +145,6 @@ ddx = ShiftLen * sind(30);                                      % shift side for
 ddy = ShiftLen * cosd(30);                                      % shift side for small radius tranzaction
 CtA1 = [RlA(1)+ShiftLen (RlA1(2)-RollAdd)];                     % ! Left-down 
 CtB1 = [RlB(1)-ShiftLen (RlB1(2)-RollAdd)];                     % ! Right-down
-
 CtB2 = [RlB2(1)+dx-ddx RlB2(2)+dy+ddy];                         % ! Right-up
 CtC1 = [RlC1(1)+dx+ddx RlC1(2)+dy-ddy];                         % ! Top-right
 CtC2 = [RlC2(1)-dx-ddx RlC2(2)+dy-ddy];                         % ! Top-left
