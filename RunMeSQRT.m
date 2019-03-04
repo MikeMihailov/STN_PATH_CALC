@@ -14,7 +14,7 @@ StartTime = cputime;            % Start time megerment
 %***************************************************************
 clf;                % clear plot window
 subplot(1,1,1);     % make new sub plot window
-plotWork = 1;
+plotWork = 0;
 DebugPlot = 0;
 PlotFirstCutTest = 1;
 PlotData = 0;
@@ -38,9 +38,10 @@ ShiftLen  = 20;       % mm
 L  = 402;           % From center of carriet to end of scissors(было 512)
 LR = 307;           % Carriage lenhth, mm (last - 339)
 % Cut Tech Proc Data:
-CutInputAng = 30;   % grad
-CutLagAng   = 1;    % grad
-MinCutRad   = 45;   % mm (45)
+CutInputAng  = 30;   % grad
+CutLagAng    = 1;    % grad
+MinCutRad    = 45;   % mm
+distFirstCut = 0;    % mm
 % Calc Data:
 dAlfa   = 0.001;	% delta alfa
 DotAcc  = 200;      % Delta dot in output
@@ -54,10 +55,15 @@ MaxVel    = 1;      % Max speed of tabel
 %***************************************************************
 %***********************INTERNAL********************************
 %***************************************************************
-BarMax    = 18;     % Nomber of bar dots
-BarCur    = 0;      % Start bar dot
-
+BarMax  = 18;                   % Nomber of bar dots
+BarCur  = 0;                    % Start bar dot
 nAlfa   = FullAng/dAlfa;        % Nome of calc stops
+
+Betta   = 0:1:(nAlfa-dAlfa);    % Current angel
+OUT_Ax  = 0:1:(nAlfa-dAlfa);    % Position dot A on OX 
+OUT_Ay  = 0:1:(nAlfa-dAlfa);    % Position dot A on OY
+OUT_By  = 0:1:(nAlfa-dAlfa);    % Position dot B on OY
+DrawSim = 0:1:(nAlfa-dAlfa);    % Sign for drawing
 %***************************************************************
 %************************OUTPUT*********************************
 %***************************************************************
@@ -108,7 +114,7 @@ line([ dX2 -dX2],[-dY1 -dY1],'Color','blue');
 line([-dX1 -dX1],[ dY2 -dY2],'Color','blue');
 line([-dX2  dX2],[ dY1  dY1],'Color','blue');
 
-OaX = dX2;
+OaX = dX2; 
 OaY = dY2;
 
 Otr = [ OaX  OaY];
@@ -137,6 +143,7 @@ OTRdr  = [ dX2 -dY2];
 OTRdl  = [-dX2 -dY2];
 OTRtl  = [-dX2  dY2];
 TRR    = CutSizeX/2 - dX2;
+TRoo   = sqrt(dX2*dX2+dY2*dY2);
 xxx    = (ShiftLen/sind(45)*CutRad)/(TRR-CutRad);
 TRalf  = 45 - acosd(CutRad/xxx);
 tTRtr1 = linspace(0,TRalf);
@@ -186,10 +193,33 @@ line([TRd_dr12(1) TRd_dr11(1)],[TRd_dr12(2) TRd_dr11(2)],'Color','green');
 line([TRd_dl12(1) TRd_dl11(1)],[TRd_dl12(2) TRd_dl11(2)],'Color','green'); 
 line([TRd_tl12(1) TRd_tl11(1)],[TRd_tl12(2) TRd_tl11(2)],'Color','green'); 
 
-line([TRd_tr12(2) TRd_tr11(2)],[TRd_tr12(1) TRd_tr11(1)],'Color','green'); 
-line([TRd_dr12(2) TRd_dr11(2)],[TRd_dr12(1) TRd_dr11(1)],'Color','green'); 
-line([TRd_dl12(2) TRd_dl11(2)],[TRd_dl12(1) TRd_dl11(1)],'Color','green'); 
-line([TRd_tl12(2) TRd_tl11(2)],[TRd_tl12(1) TRd_tl11(1)],'Color','green'); 
+TRd_tr22(2) =  TRd_tr12(2) - dY2 + dX2;
+TRd_tr21(2) =  TRd_tr11(2) - dY2 + dX2;
+TRd_dr22(2) = -TRd_dr12(2) - dY2 + dX2;
+TRd_dr21(2) = -TRd_dr11(2) - dY2 + dX2;
+TRd_dl22(2) =  TRd_dl12(2) + dY2 - dX2;
+TRd_dl21(2) =  TRd_dl11(2) + dY2 - dX2;
+TRd_tl22(2) = -TRd_tl12(2) + dY2 - dX2;
+TRd_tl21(2) = -TRd_tl11(2) + dY2 - dX2;
+
+TRd_tr22(1) =  TRd_tr12(1) - dX2 + dY2;
+TRd_tr21(1) =  TRd_tr11(1) - dX2 + dY2;
+TRd_dr22(1) = -TRd_dr12(1) + dX2 - dY2;
+TRd_dr21(1) = -TRd_dr11(1) + dX2 - dY2;
+TRd_dl22(1) =  TRd_dl12(1) + dX2 - dY2;
+TRd_dl21(1) =  TRd_dl11(1) + dX2 - dY2;
+TRd_tl22(1) = -TRd_tl12(1) - dX2 + dY2;
+TRd_tl21(1) = -TRd_tl11(1) - dX2 + dY2;
+
+
+TRdx = TRd_tr12(1) - TRd_tr11(1);
+TRdy = TRd_tr12(2) - TRd_tr11(2);
+TRlen = sqrt(TRdx*TRdx + TRdy*TRdy);
+
+line([TRd_tr22(2) TRd_tr21(2)],[TRd_tr22(1) TRd_tr21(1)],'Color','green'); 
+line([TRd_dr22(2) TRd_dr21(2)],[TRd_dr22(1) TRd_dr21(1)],'Color','green'); 
+line([TRd_dl22(2) TRd_dl21(2)],[TRd_dl22(1) TRd_dl21(1)],'Color','green'); 
+line([TRd_tl22(2) TRd_tl21(2)],[TRd_tl22(1) TRd_tl21(1)],'Color','green'); 
 %***************************************************************
 %***************************************************************
 %***************************************************************
@@ -204,13 +234,24 @@ line([TRd_tl12(2) TRd_tl11(2)],[TRd_tl12(1) TRd_tl11(1)],'Color','green');
 %***************************************************************
 
 %******************RANGE CALCULATION****************************
-
-
-
+BisxCut      = sqrt(OaX*OaX+OaY*OaY) + CutRad;
+firstCutRad  = distFirstCut + BisxCut;
+if (BlankSizeX > BlankSizeY)
+    h = BlankSizeX/2;
+else
+    h = BlankSizeY/2;
+end
+alfFC = acosd(h/firstCutRad);
+stFC  = alfFC-90;
+enFC  = 270 - atand(OaX/OaY);                    %270-45
+tFC   = linspace(stFC,enFC);
+line(firstCutRad*cosd(tFC),firstCutRad*sind(tFC),'Color','red');
+%***************************************************************
 %**********************FIRST CUT********************************
+%***************************************************************
 CurAng = 1;
-FC_st_d = FCA_st_tb_ang;
-FC_en_d = 300;
+FC_st_d = stFC;
+FC_en_d = enFC;
 for ang = FC_st_d:dAlfa:FC_en_d
     Betta(CurAng)    = ang;
     OUT_Bang(CurAng) = 0;
@@ -218,7 +259,60 @@ for ang = FC_st_d:dAlfa:FC_en_d
     OUT_Ay(CurAng)   = 0;
     OUT_Bx(CurAng)   = firstCutRad + L;
     OUT_By(CurAng)   = 0;
-    %firstCutRad
+    DrawSim(CurAng)  = 1;
     CurAng = CurAng + 1;
 end
+%***************************************************************
+%***********************SECOND CUT******************************
+%***************************************************************
+hTranz = 0; %???????????????????????????????????????????????????
+CurAng = CurAng - 1;
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel_Small(CutSizeX,CutSizeY,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSizeX,SimbSizeY,TRalf,ShiftLen,OTRtr,TRR,hTranz,TRoo,TRlen,TRd_tr12(1));
+%***************************************************************
+%***********************PLOT CUT********************************
+%***************************************************************
+for i = 1:1:CurAng-1
+    rho(i) = Betta(i)+ DrawSim(i)*atand(OUT_Ay(i)/OUT_Ax(i));
+    rhi(i) = sqrt(OUT_Ax(i)*OUT_Ax(i)+OUT_Ay(i)*OUT_Ay(i));
+    xx(i)  = rhi(i)*cosd(rho(i));
+    yy(i)  = rhi(i)*sind(rho(i));
+end
+if (plotWork == 0)
+    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','black');
+end
+
+for i = 1:1:CurAng-1
+   rho(i) = Betta(i);
+   rhi(i) = sqrt(OUT_Bx(i)*OUT_Bx(i)+OUT_By(i)*OUT_By(i));
+   xx(i)  = rhi(i)*cosd(rho(i));
+   yy(i)  = rhi(i)*sind(rho(i));
+end
+if (plotWork == 0)
+    line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
+end
+%***************************************************************
+%********************SAVE START COND****************************
+%***************************************************************
+
+%***************************************************************
+%*******************SAVE CUT TO CAM*****************************
+%***************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%***************************************************************
+%***************************************************************
 %***************************************************************

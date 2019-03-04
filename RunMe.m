@@ -469,7 +469,6 @@ LoadBar(BarMax,BarCur);
 %**************************************************************************
 %**************************************SECOND CUT**************************
 %**************************************************************************
-
 CurAng = CurAng - 1;
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz,AdOO,AdR);
 for i = 1:1:TR_End
@@ -484,7 +483,6 @@ end
 CurAng = CurAng + TR_End;
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
-
 %**************************************************************************
 %***********************PLOT CUT*******************************************
 %**************************************************************************
