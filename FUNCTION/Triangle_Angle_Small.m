@@ -117,7 +117,6 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
-a = Bang(CurAng-1);
 % Tranzit Line
 st_d = en_d;
 en_d = st_d + LineAngRange - dAlfa;
@@ -235,8 +234,7 @@ end
 % Tranzit Line
 st_d = en_d - dAlfa;
 en_d = st_d + LineAngRange - dAlfa;
-for ang = st_d:dAlfa:en_d
-    
+for ang = st_d:dAlfa:en_d    
     al = (ang+alf-120);
     AAd = (hTranz + L)*tand(al);
     Ay(CurAng)    = L*sind(al);

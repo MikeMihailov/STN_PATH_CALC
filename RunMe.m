@@ -14,7 +14,7 @@ StartTime = cputime;            % Start time megerment
 %***************************************************************
 clf;                % clear plot window
 subplot(1,1,1);     % make new sub plot window
-plotWork = 1;
+plotWork = 0;
 DebugPlot = 0;
 PlotFirstCutTest = 1;
 PlotData = 0;

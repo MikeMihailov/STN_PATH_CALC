@@ -1,4 +1,4 @@
-function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = SQRT_Angel_Small(HX,HY,R,L,dAlfa,Str,R2,H2X,H2Y,alf,shift,Ot,Rt,hTranz,AdOO,TRlen,RTXb)
+function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = SQRT_Angel_Small(HX,HY,R,L,dAlfa,Str,R2,H2X,H2Y,alf,shift,Ot,Rt,hTranz,AdOO,TRlen,RTXb,stAng,tOO)
 %***************************************************************
 %**************************DEBUG********************************
 %***************************************************************
@@ -9,6 +9,9 @@ DebugPlot = 0;  % 1 - plot data from function
 % SIMBOL GEOMETRIC DATA:
 hx  = HX/2;
 hy  = HY/2;
+
+M = tOO;
+%{
 Mx  = HX - hx - 2*R;
 My  = HY - hy - 2*R;
 
@@ -25,7 +28,7 @@ TRy = shift + ddy*cosd(45);     % Streght tranzit size
 
 Sx  = (HX - 4*R*sind(45))/2-TRx;% Real streght half side of simbol
 Sy  = (HY - 4*R*sind(45))/2-TRy;% Real streght half side of simbol
-
+%}
 % GRID SIZE:
 nAlfa  = 360/dAlfa;             % Nome of calc stops
 % INCRIMENT:
@@ -97,103 +100,465 @@ sqrtRenge(13) = sqrtRenge(12) + HalfStreghtAngleRangeX; % 12 - 13
 %***************************************************************
 %********************MAIN CALCULATION***************************
 %***************************************************************
-if (HX > HY)
-    h = HX/2;
-else
-    h = HY/2;
-end
-alfFC = acosd(h/firstCutRad);
+
 %********************ANGLE PART 11->12**************************
 % Halfe angle
-temp = (TriangleRenge(12) - TriangleRenge(11))/2;
-st_d = -alfFC;
+temp = (sqrtRenge(12) - sqrtRenge(11))/2;
+st_d = 180-stAng;
 en_d = st_d + temp - TranzitAngleRange - LineAngRange - dAlfa;
+DELTA = 225;
+for ang = st_d:dAlfa:en_d
+	Cy = M*cosd(ang-DELTA);
+    Cx = M*sind(ang-DELTA);
+    Cr = L+R;
+    Bang(CurAng) = atand(Cy/sqrt(Cr*Cr-Cy*Cy));
+    Bx(CurAng)   = Cx+sqrt(Cr*Cr-Cy*Cy);
+    By(CurAng)   = 0;
+    Ax(CurAng)   = Bx(CurAng)-L*cosd(Bang(CurAng));
+    Ay(CurAng)   = L*sind(Bang(CurAng));
+    Simb(CurAng) = 1;
+    CurAng       = CurAng + 1;
+end
 % Tranzit Line
-
+st_d = en_d;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (ang+alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Tranzit radius
-
+st_d = en_d;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1,  -45, 0,  0, 1);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 %*******************STREGHT PART 12->13************************* 
-
+strAng = HalfStreghtAngleRangeX;
+h      = hx;
+for ang = 0:dAlfa:(strAng - dAlfa)
+	AAd = (h + L)*tand(strAng-ang);
+    Ay(CurAng)    = -L*sind(strAng-ang);
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(strAng-ang)+Ax(CurAng);
+    Betta(CurAng) = strAng-ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
+st_d = st_d + strAng- dAlfa;
 %********************STREGHT PART 1->2**************************
-
+strAng = HalfStreghtAngleRangeX;
+h      = hx;
+for ang = 0:dAlfa:strAng
+    AAd = (h + L)*tand(ang);
+    Ay(CurAng)    = L*sind(ang);
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    temp1 = L*cosd(ang);
+    temp2 = Ax(CurAng);
+    Bx(CurAng)    = L*cosd(ang)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %*********************ANGLE PART 2->3***************************
-
 % Tranzit radius
+st_d = HalfStreghtAngleRangeX;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 45, 0,  0, 0);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
+% Tranzit Line
+st_d = en_d - dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (ang-alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
+% Halfe angle
+temp = (sqrtRenge(3) - sqrtRenge(2))/2;
+st_d = TranzitAngleRange + LineAngRange;
+en_d = temp-dAlfa;
+for ang = st_d:dAlfa:en_d
+    Cx = M * cosd(temp-ang);
+    By(CurAng) = 0;
+    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng) = Cx + buf;
+    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
+    Ay(CurAng)    = L*sind(Betta(CurAng));
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
+% Halfe angle
+st_d = 45;
+en_d = st_d + temp - LineAngRange - TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    a = ang-135;
+    Cy = M*cosd(a);
+    Cx = M*sind(a);
+    Cr = L+R;
+    Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
+    Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
+    By(CurAng)   = 0;
+    Ax(CurAng)   = (Bx(CurAng)-L*cosd(Bang(CurAng)));
+    Ay(CurAng)   = L*sind(Bang(CurAng));
+    Simb(CurAng) = 1;
+    CurAng       = CurAng + 1;
+end
 
 % Tranzit Line
-
-% Halfe angle
-
-% Halfe angle
-
-% Tranzit Line
-
+beta = HalfStreghtAngleRangeX+RadiusAngleRange-TranzitAngleRange-LineAngRange;
+st_d = en_d-dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (90-beta-alf) - (ang-st_d);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = -L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Tranzit radius
-
+st_d = en_d - dAlfa;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 45, 0,  0, 0);
+    Ay(CurAng) = -Ay(CurAng);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 %********************STREGHT PART 3->4**************************
-
+strAng = HalfStreghtAngleRangeY;
+h      = hy;
+buf = sqrtRenge(4)-sqrtRenge(3);
+for ang = 0:dAlfa:(strAng - dAlfa)
+    AAd = (h + L)*tand(strAng-ang);
+    Ay(CurAng)    = -L*sind(strAng-ang);
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(buf-ang)+Ax(CurAng);
+    Betta(CurAng) = strAng-ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %********************STREGHT PART 4->5**************************
-
+strAng = HalfStreghtAngleRangeY;
+h      = hy;
+for ang = 0:dAlfa:strAng
+    AAd = (h + L)*tand(ang);
+    Ay(CurAng)    = L*sind(ang)-0.1777;
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(ang)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %*********************ANGLE PART 5->6***************************
-
 % Tranzit radius
-
+st_d = en_d - dAlfa + 2*HalfStreghtAngleRangeY;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 135, 0,  0, 0);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 % Tranzit Line
-
+beta = HalfStreghtAngleRangeX+RadiusAngleRange-TranzitAngleRange-LineAngRange;
+st_d = en_d-dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (ang-90-alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Halfe angle
-
+temp = (sqrtRenge(6) - sqrtRenge(5))/2;
+st_d = TranzitAngleRange + LineAngRange;
+en_d = temp-dAlfa;
+for ang = st_d:dAlfa:en_d
+    Cx = M * cosd(temp-ang);
+    By(CurAng) = 0;
+    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng) = Cx + buf;
+    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
+    Ay(CurAng)    = L*sind(Betta(CurAng));
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Halfe angle
-
+st_d = 45;
+en_d = st_d + temp - LineAngRange - TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    a = ang-135;
+    Cy = M*cosd(a);
+    Cx = M*sind(a);
+    Cr = L+R;
+    Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
+    Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
+    By(CurAng)   = 0;
+    Ax(CurAng)   = (Bx(CurAng)-L*cosd(Bang(CurAng)));
+    Ay(CurAng)   = L*sind(Bang(CurAng));
+    Simb(CurAng) = 1;
+    CurAng       = CurAng + 1;
+end
 % Tranzit Line
-
+st_d = en_d-dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (90-ang-alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = -L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Tranzit radius
-
+st_d = en_d - dAlfa;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 45, 0,  0, 0);
+    Ay(CurAng) = -Ay(CurAng);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 %********************STREGHT PART 6->7**************************
-
+strAng = HalfStreghtAngleRangeX;
+h      = hx;
+buf = sqrtRenge(4)-sqrtRenge(3);
+for ang = 0:dAlfa:(strAng - dAlfa)
+    AAd = (h + L)*tand(strAng-ang);
+    Ay(CurAng)    = -L*sind(strAng-ang);
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(buf-ang)+Ax(CurAng);
+    Betta(CurAng) = strAng-ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %********************STREGHT PART 7->8**************************
-
+strAng = HalfStreghtAngleRangeX;
+h      = hx;
+for ang = 0:dAlfa:strAng
+    AAd = (h + L)*tand(ang);
+    Ay(CurAng)    = L*sind(ang)-0.1777;
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(ang)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %*********************ANGLE PART 8->9***************************
-
 % Tranzit radius
-
+st_d = en_d - dAlfa + 2*HalfStreghtAngleRangeY;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 135, 0,  0, 0);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 % Tranzit Line
-
+st_d = en_d-dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (ang-90-alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Halfe angle
-
+temp = (sqrtRenge(9) - sqrtRenge(8))/2;
+st_d = TranzitAngleRange + LineAngRange;
+en_d = temp-dAlfa;
+for ang = st_d:dAlfa:en_d
+    Cx = M * cosd(temp-ang);
+    By(CurAng) = 0;
+    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng) = Cx + buf;
+    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
+    Ay(CurAng)    = L*sind(Betta(CurAng));
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Halfe angle
-
+st_d = 45;
+en_d = st_d + temp - LineAngRange - TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    a = ang-135;
+    Cy = M*cosd(a);
+    Cx = M*sind(a);
+    Cr = L+R;
+    Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
+    Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
+    By(CurAng)   = 0;
+    Ax(CurAng)   = (Bx(CurAng)-L*cosd(Bang(CurAng)));
+    Ay(CurAng)   = L*sind(Bang(CurAng));
+    Simb(CurAng) = 1;
+    CurAng       = CurAng + 1;
+end
 % Tranzit Line
-
+st_d = en_d-dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (90-ang-alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = -L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Tranzit radius
-
+st_d = en_d - dAlfa;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 45, 0,  0, 0);
+    Ay(CurAng) = -Ay(CurAng);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 %********************STREGHT PART 9->10**************************
-
+strAng = HalfStreghtAngleRangeY;
+h      = hy;
+buf = sqrtRenge(10)-sqrtRenge(9);
+for ang = 0:dAlfa:(strAng - dAlfa)
+    AAd = (h + L)*tand(strAng-ang);
+    Ay(CurAng)    = -L*sind(strAng-ang);
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(buf-ang)+Ax(CurAng);
+    Betta(CurAng) = strAng-ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %********************STREGHT PART 10->11*************************
-
+strAng = HalfStreghtAngleRangeY;
+h      = hy;
+for ang = 0:dAlfa:strAng
+    AAd = (h + L)*tand(ang);
+    Ay(CurAng)    = L*sind(ang)-0.1777;
+    Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(ang)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %*********************ANGLE PART 11->12**************************
-
 % Tranzit radius
-
+st_d = en_d - dAlfa + 2*HalfStreghtAngleRangeY;
+en_d = st_d + TranzitAngleRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,AdOO,Rt,L, 1, 135, 0,  0, 0);
+    Simb(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
 % Tranzit Line
-
+st_d = en_d-dAlfa;
+en_d = st_d + LineAngRange - dAlfa;
+for ang = st_d:dAlfa:en_d
+    al = (ang-90-alf);
+    AAd = (hTranz + L)*tand(al);
+    Ay(CurAng)    = L*sind(al);
+    Ax(CurAng)    = sqrt(hTranz*hTranz + AAd*AAd - Ay(CurAng)*Ay(CurAng));
+    By(CurAng)    = 0;
+    Bx(CurAng)    = L*cosd(al)+Ax(CurAng);
+    Betta(CurAng) = ang;
+    Bang(CurAng)  = al;
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 % Halfe angle
-
-
-
-
-
-
-
-
-
-
+temp = (sqrtRenge(12) - sqrtRenge(11))/2;
+st_d = TranzitAngleRange + LineAngRange;
+en_d = temp-dAlfa;
+for ang = st_d:dAlfa:en_d
+    Cx = M * cosd(temp-ang);
+    By(CurAng) = 0;
+    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng) = Cx + buf;
+    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
+    Ay(CurAng)    = L*sind(Betta(CurAng));
+    Bang(CurAng)  = asind(Ay(CurAng)/L);
+    Simb(CurAng)  = 1;
+    CurAng        = CurAng + 1;
+end
 %***************************************************************
 %**********************DATA OUTPUT******************************
 %***************************************************************
 End = CurAng-1;
 if DebugPlot == 1
     subplot(1,1,1);
-    plot(Alfa(1:CurAng-1), Bang(1:CurAng-1), Alfa(1:CurAng-1), Bx(1:CurAng-1));
+    plot(Alfa(1:CurAng-1), Bang(1:CurAng-1), Alfa(1:CurAng-1), Ay(1:CurAng-1));
     title(['Coordindte of A & B.']);
     xlabel('Angle, grad');
     ylabel('Coordindte, mm');
