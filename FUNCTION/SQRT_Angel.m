@@ -68,7 +68,6 @@ sqrtRenge(10) = sqrtRenge(9)  + HalfStreghtAngleRangeY; % 9  - 10
 sqrtRenge(11) = sqrtRenge(10) + HalfStreghtAngleRangeY; % 10 - 11
 sqrtRenge(12) = sqrtRenge(11) + RadiusAngleRange;       % 11 - 12
 sqrtRenge(13) = sqrtRenge(12) + HalfStreghtAngleRangeX; % 12 - 13
-
 if (debug == 1)
     "RANG at " + (cputime-StartTime) + " sec!"
 end

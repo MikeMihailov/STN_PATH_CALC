@@ -25,7 +25,7 @@ grid;
 %***************************************************************
 % Simbol Data:
 SimbSizeX = 908;
-SimbSizeY = 908;
+SimbSizeY = SimbSizeX;
 SimbRad   = 49;      % mm49
 RollAdd   = 22;      % mm
 CutRad    = 69;      % mm
@@ -279,6 +279,7 @@ end
 %***************************************************************
 CurAng = CurAng - 1;
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel_Small(CutSizeX,CutSizeY,CutRad,L,dAlfa,Betta(CurAng),TRalf,OTRtr,TRR,hTranz,TRoo,TRlen,TRd_tr12(1),FC_en_d,tOO);
+
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
@@ -340,18 +341,12 @@ DotAcc  = 1200;	% Delta dot in output
 WrightCamsToFile(OUT_Bx,OUT_Bang,Betta,'CAM_Bx_Cut_SQRT.txt','CAM_Alfa_Cut_SQRT.txt',(CurAng-1),DotAcc);
 WrightCamToFile(OUT_Table,Betta,'CAM_Table.txt',(CurAng-1),DotAcc);
 cd(curdir);
-
-%EndTime = cputime - StartTime;            % Start time megerment
-%"CUT calc at " + EndTime + " sec!"
 %***************************************************************
 %**********************CALC ROLL********************************
 %***************************************************************
 CurAng = 1;
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel(SimbSizeX,SimbSizeY,SimbRad,LR,dAlfa,0,OTRtr,tOO);
 CurAng = TR_End;
-
-%EndTime = cputime - StartTime;            % Start time megerment
-%"ROLLcalc at " + EndTime + " sec!"
 %***************************************************************
 %***********************PLOT ROLL*******************************
 %***************************************************************

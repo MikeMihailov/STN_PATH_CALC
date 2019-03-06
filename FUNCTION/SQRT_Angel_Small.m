@@ -3,6 +3,7 @@ function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = SQRT_Angel_Small(HX,HY,R,L,dAlfa,Str
 %**************************DEBUG********************************
 %***************************************************************
 DebugPlot = 0;  % 1 - plot data from function
+debug     = 1;
 %***************************************************************
 %*************************INTERNAL******************************
 %***************************************************************
@@ -17,6 +18,9 @@ CurAng = 1;                     % current angle - counter
 % RANGES:
 sqrtRengeNom = 12;                  % Nomber of triangle ranges
 sqrtRenge    = 0:1:sqrtRengeNom;	% Mass triangle ranges initalistion
+if (debug == 1)
+    StartTime    = cputime;
+end
 %***************************************************************
 %*************************OUTPUT********************************
 %***************************************************************
@@ -70,6 +74,9 @@ sqrtRenge(10) = sqrtRenge(9)  + HalfStreghtAngleRangeY; % 9  - 10
 sqrtRenge(11) = sqrtRenge(10) + HalfStreghtAngleRangeY; % 10 - 11
 sqrtRenge(12) = sqrtRenge(11) + RadiusAngleRange;       % 11 - 12
 sqrtRenge(13) = sqrtRenge(12) + HalfStreghtAngleRangeX; % 12 - 13
+if (debug == 1)
+    "RANG at " + (cputime-StartTime) + " sec!"
+end
 %***************************************************************
 %********************MAIN CALCULATION***************************
 %***************************************************************
@@ -116,6 +123,10 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng = CurAng + 1;
 end
+if (debug == 1)
+    "11->12 at " + (cputime-StartTime) + " sec!"
+end
+
 %*******************STREGHT PART 12->13************************* 
 strAng = HalfStreghtAngleRangeX;
 h      = hx;
@@ -131,6 +142,9 @@ for ang = 0:dAlfa:(strAng - dAlfa)
     CurAng        = CurAng + 1;
 end
 st_d = st_d + strAng- dAlfa;
+if (debug == 1)
+    "12->13 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 1->2**************************
 strAng = HalfStreghtAngleRangeX;
 h      = hx;
@@ -146,6 +160,9 @@ for ang = 0:dAlfa:strAng
     Bang(CurAng)  = asind(Ay(CurAng)/L);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
+end
+if (debug == 1)
+    "1->2 at " + (cputime-StartTime) + " sec!"
 end
 %*********************ANGLE PART 2->3***************************
 % Tranzit radius
@@ -205,16 +222,6 @@ for ang = st_d:dAlfa:en_d
     CurAng       = CurAng + 1;
 end
 % Tranzit Line
-
-
-
-    %{
-beta = HalfStreghtAngleRangeX+RadiusAngleRange-TranzitAngleRange-LineAngRange;
-st_d = en_d-dAlfa;
-en_d = st_d + LineAngRange - dAlfa;
-for ang = st_d:dAlfa:en_d
-    al = (90-beta-alf) - (ang-st_d);
-    %}
 st_d = en_d-dAlfa;
 en_d = st_d + LineAngRange - dAlfa;
 for ang = st_d:dAlfa:en_d
@@ -231,10 +238,6 @@ for ang = st_d:dAlfa:en_d
 end
 
 % Tranzit radius
-%**************************************************************************
-%**************************************************************************
-%**************************************************************************
-%**************************************************************************
 st_d = en_d - dAlfa;
 en_d = st_d + TranzitAngleRange - dAlfa;
 for ang = st_d:dAlfa:en_d
@@ -243,10 +246,9 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng = CurAng + 1;
 end
-%**************************************************************************
-%**************************************************************************
-%**************************************************************************
-%**************************************************************************
+if (debug == 1)
+    "2->3 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 3->4**************************
 strAng = HalfStreghtAngleRangeY;
 h      = hy;
@@ -262,6 +264,9 @@ for ang = 0:dAlfa:(strAng - dAlfa)
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
+if (debug == 1)
+    "3->4 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 4->5**************************
 strAng = HalfStreghtAngleRangeY;
 h      = hy;
@@ -276,6 +281,10 @@ for ang = 0:dAlfa:strAng
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
+if (debug == 1)
+    "4->5 at " + (cputime-StartTime) + " sec!"
+end
+
 %*********************ANGLE PART 5->6***************************
 % Tranzit radius
 st_d = en_d - dAlfa + 2*HalfStreghtAngleRangeY;
@@ -358,6 +367,9 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng = CurAng + 1;
 end
+if (debug == 1)
+    "5->6 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 6->7**************************
 strAng = HalfStreghtAngleRangeX;
 h      = hx;
@@ -373,6 +385,9 @@ for ang = 0:dAlfa:(strAng - dAlfa)
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
+if (debug == 1)
+    "6->7 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 7->8**************************
 strAng = HalfStreghtAngleRangeX;
 h      = hx;
@@ -386,6 +401,9 @@ for ang = 0:dAlfa:strAng
     Bang(CurAng)  = asind(Ay(CurAng)/L);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
+end
+if (debug == 1)
+    "7->8 at " + (cputime-StartTime) + " sec!"
 end
 %*********************ANGLE PART 8->9***************************
 % Tranzit radius
@@ -468,6 +486,9 @@ for ang = st_d:dAlfa:en_d
     Simb(CurAng) = 1;
     CurAng = CurAng + 1;
 end
+if (debug == 1)
+    "8->9 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 9->10**************************
 strAng = HalfStreghtAngleRangeY;
 h      = hy;
@@ -483,6 +504,9 @@ for ang = 0:dAlfa:(strAng - dAlfa)
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
+if (debug == 1)
+    "9->10 at " + (cputime-StartTime) + " sec!"
+end
 %********************STREGHT PART 10->11*************************
 strAng = HalfStreghtAngleRangeY;
 h      = hy;
@@ -496,6 +520,9 @@ for ang = 0:dAlfa:strAng
     Bang(CurAng)  = asind(Ay(CurAng)/L);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
+end
+if (debug == 1)
+    "10->11 at " + (cputime-StartTime) + " sec!"
 end
 %*********************ANGLE PART 11->12**************************
 % Tranzit radius
@@ -537,6 +564,9 @@ for ang = st_d:dAlfa:en_d
     Bang(CurAng)  = asind(Ay(CurAng)/L);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
+end
+if (debug == 1)
+    "11->12 at " + (cputime-StartTime) + " sec!"
 end
 %***************************************************************
 %**********************DATA OUTPUT******************************
