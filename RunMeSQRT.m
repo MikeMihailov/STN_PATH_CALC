@@ -278,7 +278,7 @@ end
 %***********************SECOND CUT******************************
 %***************************************************************
 CurAng = CurAng - 1;
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel_Small(CutSizeX,CutSizeY,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSizeX,SimbSizeY,TRalf,ShiftLen,OTRtr,TRR,hTranz,TRoo,TRlen,TRd_tr12(1),FC_en_d,tOO);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel_Small(CutSizeX,CutSizeY,CutRad,L,dAlfa,Betta(CurAng),TRalf,OTRtr,TRR,hTranz,TRoo,TRlen,TRd_tr12(1),FC_en_d,tOO);
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
@@ -314,23 +314,99 @@ end
 %***************************************************************
 %********************SAVE START COND****************************
 %***************************************************************
-
+cd([curdir '\OUTPUT']);
+addpath([curdir '\FUNCTION']);    % Include folder with extra functions
+WrightStartComd(OUT_Bx,OUT_Bang,Betta,(CurAng-1),'StCutSQRT');
+cd(curdir);
 %***************************************************************
 %*******************SAVE CUT TO CAM*****************************
 %***************************************************************
+norm_bx = OUT_Bx(1);
+norm_ba = OUT_Bang(1);
+norm_al = Betta(1);
+norm_tb = OUT_Table(1);
+for i = 1:1:CurAng-1
+    Betta(i)     = Betta(i)    - norm_al;
+    OUT_Bx(i)    = OUT_Bx(i)   - norm_bx;
+    %************************************
+    OUT_Bx(i)    = 0 - OUT_Bx(i);
+    %************************************
+    OUT_Bang(i)  = OUT_Bang(i) - norm_ba;
+    OUT_Table(i) = OUT_Table(i)- norm_tb;
+end
+cd([curdir '\OUTPUT']);
+addpath([curdir '\FUNCTION']);    % Include folder with extra functions
+DotAcc  = 1200;	% Delta dot in output
+WrightCamsToFile(OUT_Bx,OUT_Bang,Betta,'CAM_Bx_Cut_SQRT.txt','CAM_Alfa_Cut_SQRT.txt',(CurAng-1),DotAcc);
+WrightCamToFile(OUT_Table,Betta,'CAM_Table.txt',(CurAng-1),DotAcc);
+cd(curdir);
 
+%EndTime = cputime - StartTime;            % Start time megerment
+%"CUT calc at " + EndTime + " sec!"
+%***************************************************************
+%**********************CALC ROLL********************************
+%***************************************************************
+CurAng = 1;
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel(SimbSizeX,SimbSizeY,SimbRad,LR,dAlfa,0,OTRtr,tOO);
+CurAng = TR_End;
 
+%EndTime = cputime - StartTime;            % Start time megerment
+%"ROLLcalc at " + EndTime + " sec!"
+%***************************************************************
+%***********************PLOT ROLL*******************************
+%***************************************************************
+for i = 1:1:CurAng-1
+    rho(i) = TR_Alfa(i) + atand(TR_Ay(i)/TR_Ax(i))+270;
+    rhi(i) = sqrt(TR_Ax(i)*TR_Ax(i)+TR_Ay(i)*TR_Ay(i));
+    xx(i)  = rhi(i)*cosd(rho(i));
+    yy(i)  = rhi(i)*sind(rho(i));
+end
+if (plotWork == 0)
+    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','red');
+end
 
+for i = 1:1:CurAng-1
+   rho(i) = TR_Alfa(i) + 270;
+   rhi(i) = sqrt(TR_Bx(i)*TR_Bx(i)+TR_By(i)*TR_By(i));
+   xx(i)  = rhi(i)*cosd(rho(i));
+   yy(i)  = rhi(i)*sind(rho(i));
+end
+if (plotWork == 0)
+    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
+end
 
-
-
-
-
-
-
-
-
-
+if PlotData == 1
+    subplot(1,1,1);
+    plot(TR_Alfa(1:CurAng-1), TR_Bang(1:CurAng-1), TR_Alfa(1:CurAng-1), TR_Bx(1:CurAng-1));
+    title(['Coordindte of A & B.']);
+    xlabel('Angle, grad');
+    ylabel('Coordindte, mm');
+    grid;
+    legend;
+end
+%***************************************************************
+%***********************SAVE ROLL CAM***************************
+%***************************************************************
+cd([curdir '\OUTPUT']);
+addpath([curdir '\FUNCTION']);    % Include folder with extra functions
+WrightStartComd(TR_Bx,TR_Bang,TR_Alfa,(CurAng-1),'StRollSQRT');
+cd(curdir);
+norm_bx = TR_Bx(1);
+norm_ba = TR_Bang(1);
+norm_al = TR_Alfa(1);
+for i = 1:1:TR_End
+    TR_Alfa(i) = TR_Alfa(i) - norm_al; %
+    TR_Bx(i)   = TR_Bx(i)   - norm_bx;
+    %************************************
+    TR_Bx(i)   = 0 - TR_Bx(i);
+    %************************************
+    TR_Bang(i) = TR_Bang(i) - norm_ba;
+end
+cd([curdir '\OUTPUT']);
+addpath([curdir '\FUNCTION']);    % Include folder with extra functions
+DotAcc  = 720;	% Delta dot in output
+WrightCamsToFile(TR_Bx,TR_Bang,TR_Alfa,'CAM_Bx_Roll_SQRT.txt','CAM_Alfa_Roll_SQRT.txt',TR_End,DotAcc);
+cd(curdir);
 %***************************************************************
 %***************************************************************
 %***************************************************************

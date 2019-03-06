@@ -544,7 +544,6 @@ LoadBar(BarMax,BarCur);
 %**********************CALC ROLL********************************
 %***************************************************************
 CurAng = 1;
-%TR_Bett
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim,TR_Extremums] = Triangle(SimbSize,SimbRad,LR,dAlfa,0,0);
 CurAng = TR_End;
 %***************************************************************
