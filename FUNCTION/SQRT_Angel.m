@@ -51,9 +51,13 @@ Alfa  = Str:dAlfa:(Str+360-dAlfa);	% Turn angle
 %   12     13-1    2    \/
 %***************************************************************
 Ox = Ot(1);
-HalfStreghtAngleRangeX = atand(Ox/(hx + L)) ;
-HalfStreghtAngleRangeY = atand(Ox/(hy + L)) ;
+Oy = Ot(2);
+HalfStreghtAngleRangeX = atand(Ox/(hy + L)) ;
+HalfStreghtAngleRangeY = atand(Oy/(hx + L)) ;
 RadiusAngleRange       = 90 - HalfStreghtAngleRangeX - HalfStreghtAngleRangeY;
+
+RadiusAngleRangeX = atand((Ox)/(Oy)) - HalfStreghtAngleRangeX;
+RadiusAngleRangeY = RadiusAngleRange - RadiusAngleRangeX;
 
 sqrtRenge(1)  = 0;                                      % Start point
 sqrtRenge(2)  = HalfStreghtAngleRangeX;                 % 1  - 2
@@ -77,7 +81,7 @@ end
 
 %********************STREGHT PART 1->2**************************
 strAng = HalfStreghtAngleRangeX;
-h      = hx;
+h      = hy;
 for ang = 0:dAlfa:strAng
     AAd = (h + L)*tand(ang);
     Ay(CurAng)    = L*sind(ang);
@@ -96,15 +100,14 @@ if (debug == 1)
 end
 %*********************ANGLE PART 2->3***************************
 % Halfe angle
-temp = RadiusAngleRange/2;
-st_d = 0;
-en_d = temp-dAlfa;
+st_d = HalfStreghtAngleRangeX - dAlfa;
+en_d = st_d+RadiusAngleRangeX - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Cx = M * cosd(temp-ang);
-    By(CurAng) = 0;
-    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
-    Bx(CurAng) = Cx + buf;
-    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Cx            = M * cosd(en_d-ang);
+    By(CurAng)    = 0;
+    buf           = sqrt(Cx*Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng)    = Cx + buf;
+    Betta(CurAng) = asind((M*sind(en_d-ang))/(R+L));
     Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
     Ay(CurAng)    = L*sind(Betta(CurAng));
     Bang(CurAng)  = asind(Ay(CurAng)/L);
@@ -112,13 +115,13 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 % Halfe angle
-st_d = 45;
-en_d = st_d + temp - dAlfa;
+st_d = en_d-dAlfa;
+en_d = st_d + RadiusAngleRangeY - dAlfa;
 for ang = st_d:dAlfa:en_d
-    a = ang-135;
-    Cy = M*cosd(a);
-    Cx = M*sind(a);
-    Cr = L+R;
+    a            = ang-st_d-90;
+    Cy           = M*cosd(a);
+    Cx           = M*sind(a);
+    Cr           = L+R;
     Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
     Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
     By(CurAng)   = 0;
@@ -132,7 +135,7 @@ if (debug == 1)
 end
 %********************STREGHT PART 3->4**************************
 strAng = HalfStreghtAngleRangeY;
-h      = hy;
+h      = hx;
 buf = sqrtRenge(4)-sqrtRenge(3);
 for ang = 0:dAlfa:(strAng - dAlfa)
     AAd = (h + L)*tand(strAng-ang);
@@ -150,7 +153,7 @@ if (debug == 1)
 end
 %********************STREGHT PART 4->5**************************
 strAng = HalfStreghtAngleRangeY;
-h      = hy;
+h      = hx;
 for ang = 0:dAlfa:strAng
     AAd = (h + L)*tand(ang);
     Ay(CurAng)    = L*sind(ang)-0.1777;
@@ -167,15 +170,14 @@ if (debug == 1)
 end
 %*********************ANGLE PART 5->6***************************
 % Halfe angle
-temp = RadiusAngleRange/2;
-st_d = 0;
-en_d = temp-dAlfa;
+st_d = en_d-dAlfa+2*HalfStreghtAngleRangeY;
+en_d = st_d + RadiusAngleRangeY - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Cx = M * cosd(temp-ang);
-    By(CurAng) = 0;
-    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
-    Bx(CurAng) = Cx + buf;
-    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Cx            = M * cosd(en_d-ang);
+    By(CurAng)    = 0;
+    buf           = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng)    = Cx + buf;
+    Betta(CurAng) = asind((M*sind(en_d-ang))/(R+L));
     Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
     Ay(CurAng)    = L*sind(Betta(CurAng));
     Bang(CurAng)  = asind(Ay(CurAng)/L);
@@ -183,13 +185,13 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 % Halfe angle
-st_d = 45;
-en_d = st_d + temp - dAlfa;
+st_d = en_d-dAlfa;
+en_d = st_d + RadiusAngleRangeX - dAlfa;
 for ang = st_d:dAlfa:en_d
-    a = ang-135;
-    Cy = M*cosd(a);
-    Cx = M*sind(a);
-    Cr = L+R;
+    a            = ang-st_d-90;
+    Cy           = M*cosd(a);
+    Cx           = M*sind(a);
+    Cr           = L+R;
     Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
     Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
     By(CurAng)   = 0;
@@ -203,8 +205,8 @@ if (debug == 1)
 end
 %********************STREGHT PART 6->7**************************
 strAng = HalfStreghtAngleRangeX;
-h      = hx;
-buf = sqrtRenge(4)-sqrtRenge(3);
+h      = hy;
+buf = sqrtRenge(7)-sqrtRenge(6);
 for ang = 0:dAlfa:(strAng - dAlfa)
     AAd = (h + L)*tand(strAng-ang);
     Ay(CurAng)    = -L*sind(strAng-ang);
@@ -221,7 +223,7 @@ if (debug == 1)
 end
 %********************STREGHT PART 7->8**************************
 strAng = HalfStreghtAngleRangeX;
-h      = hx;
+h      = hy;
 for ang = 0:dAlfa:strAng
     AAd = (h + L)*tand(ang);
     Ay(CurAng)    = L*sind(ang)-0.1777;
@@ -238,15 +240,14 @@ if (debug == 1)
 end
 %*********************ANGLE PART 8->9***************************
 % Halfe angle
-temp = RadiusAngleRange/2;
-st_d = 0;
-en_d = temp-dAlfa;
+st_d = en_d-dAlfa+2*HalfStreghtAngleRangeX;
+en_d = st_d + RadiusAngleRangeX - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Cx = M * cosd(temp-ang);
-    By(CurAng) = 0;
-    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
-    Bx(CurAng) = Cx + buf;
-    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Cx            = M * cosd(en_d-ang);
+    By(CurAng)    = 0;
+    buf           = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng)    = Cx + buf;
+    Betta(CurAng) = asind((M*sind(en_d-ang))/(R+L));
     Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
     Ay(CurAng)    = L*sind(Betta(CurAng));
     Bang(CurAng)  = asind(Ay(CurAng)/L);
@@ -254,13 +255,13 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 % Halfe angle
-st_d = 45;
-en_d = st_d + temp - dAlfa;
+st_d = en_d-dAlfa;
+en_d = st_d + RadiusAngleRangeY - dAlfa;
 for ang = st_d:dAlfa:en_d
-    a = ang-135;
-    Cy = M*cosd(a);
-    Cx = M*sind(a);
-    Cr = L+R;
+    a            = ang-st_d-90;
+    Cy           = M*cosd(a);
+    Cx           = M*sind(a);
+    Cr           = L+R;
     Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
     Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
     By(CurAng)   = 0;
@@ -274,7 +275,7 @@ if (debug == 1)
 end
 %********************STREGHT PART 9->10**************************
 strAng = HalfStreghtAngleRangeY;
-h      = hy;
+h      = hx;
 buf = sqrtRenge(10)-sqrtRenge(9);
 for ang = 0:dAlfa:(strAng - dAlfa)
     AAd = (h + L)*tand(strAng-ang);
@@ -292,7 +293,7 @@ if (debug == 1)
 end
 %********************STREGHT PART 10->11*************************
 strAng = HalfStreghtAngleRangeY;
-h      = hy;
+h      = hx;
 for ang = 0:dAlfa:strAng
     AAd = (h + L)*tand(ang);
     Ay(CurAng)    = L*sind(ang)-0.1777;
@@ -309,29 +310,29 @@ if (debug == 1)
 end
 %*********************ANGLE PART 11->12**************************
 % Halfe angle
-temp = RadiusAngleRange/2;
-st_d = 0;
-en_d = temp-dAlfa;
+st_d = en_d-dAlfa+2*HalfStreghtAngleRangeY;
+en_d = st_d + RadiusAngleRangeY - dAlfa;
 for ang = st_d:dAlfa:en_d
-    Cx = M * cosd(temp-ang);
-    By(CurAng) = 0;
-    buf        = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
-    Bx(CurAng) = Cx + buf;
-    Betta(CurAng) = asind((M*sind(RadiusAngleRange/2-ang))/(R+L));
+    Cx            = M * cosd(en_d-ang);
+    By(CurAng)    = 0;
+    buf           = sqrt(Cx * Cx - M*M + (L+R)*(L+R));
+    Bx(CurAng)    = Cx + buf;
+    Betta(CurAng) = asind((M*sind(en_d-ang))/(R+L));
     Ax(CurAng)    = Bx(CurAng) - L*cosd(Betta(CurAng));
     Ay(CurAng)    = L*sind(Betta(CurAng));
     Bang(CurAng)  = asind(Ay(CurAng)/L);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
+
 % Halfe angle
-st_d = 45;
-en_d = st_d + temp - dAlfa;
+st_d = en_d - dAlfa;
+en_d = st_d + RadiusAngleRangeX - dAlfa;
 for ang = st_d:dAlfa:en_d
-    a = ang-135;
-    Cy = M*cosd(a);
-    Cx = M*sind(a);
-    Cr = L+R;
+    a            = ang-st_d-90;
+    Cy           = M*cosd(a);
+    Cx           = M*sind(a);
+    Cr           = L+R;
     Bang(CurAng) = -atand(Cy/sqrt(Cr*Cr-Cy*Cy));
     Bx(CurAng)   = sqrt(Cr*Cr-Cy*Cy)-Cx;
     By(CurAng)   = 0;
@@ -345,7 +346,7 @@ if (debug == 1)
 end
 %*******************STREGHT PART 12->13************************* 
 strAng = HalfStreghtAngleRangeX;
-h      = hx;
+h      = hy;
 for ang = 0:dAlfa:(strAng - dAlfa)
 	AAd = (h + L)*tand(strAng-ang);
     Ay(CurAng)    = -L*sind(strAng-ang);
@@ -366,7 +367,7 @@ end
 End = CurAng-1;
 if DebugPlot == 1
     subplot(1,1,1);
-    plot(Alfa(1:CurAng-1), Bang(1:CurAng-1), Alfa(1:CurAng-1), Ay(1:CurAng-1));
+    plot(Alfa(1:CurAng-1), Bang(1:CurAng-1), Alfa(1:CurAng-1), Bx(1:CurAng-1));
     title(['Coordindte of A & B.']);
     xlabel('Angle, grad');
     ylabel('Coordindte, mm');

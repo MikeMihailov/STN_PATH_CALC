@@ -26,6 +26,7 @@ grid;
 % Simbol Data:
 SimbSizeX = 908;
 SimbSizeY = SimbSizeX;
+
 SimbRad   = 49;      % mm49
 RollAdd   = 22;      % mm
 CutRad    = 69;      % mm
@@ -154,23 +155,23 @@ tTRdl1 = linspace(180,180+TRalf);
 tTRdl2 = linspace(270,270-TRalf);
 tTRtl1 = linspace(180,180-TRalf);
 tTRtl2 = linspace(90,90+TRalf);
-line(TRR*cosd(tTRtr1) + OTRtr(1), TRR*sind(tTRtr1) + OTRtr(2),'Color','blue');
-line(TRR*cosd(tTRtr2) + OTRtr(1), TRR*sind(tTRtr2) + OTRtr(2),'Color','blue');
-line(TRR*cosd(tTRdr1) + OTRdr(1), TRR*sind(tTRdr1) + OTRdr(2),'Color','blue');
-line(TRR*cosd(tTRdr2) + OTRdr(1), TRR*sind(tTRdr2) + OTRdr(2),'Color','blue');
-line(TRR*cosd(tTRdl1) + OTRdl(1), TRR*sind(tTRdl1) + OTRdl(2),'Color','blue');
-line(TRR*cosd(tTRdl2) + OTRdl(1), TRR*sind(tTRdl2) + OTRdl(2),'Color','blue');
-line(TRR*cosd(tTRtl1) + OTRtl(1), TRR*sind(tTRtl1) + OTRtl(2),'Color','blue');
-line(TRR*cosd(tTRtl2) + OTRtl(1), TRR*sind(tTRtl2) + OTRtl(2),'Color','blue');
+line(TRR*cosd(tTRtr1) + OTRtr(1), TRR*sind(tTRtr1) + OTRtr(2),'Color','green');
+line(TRR*cosd(tTRtr2) + OTRtr(1), TRR*sind(tTRtr2) + OTRtr(2),'Color','green');
+line(TRR*cosd(tTRdr1) + OTRdr(1), TRR*sind(tTRdr1) + OTRdr(2),'Color','green');
+line(TRR*cosd(tTRdr2) + OTRdr(1), TRR*sind(tTRdr2) + OTRdr(2),'Color','green');
+line(TRR*cosd(tTRdl1) + OTRdl(1), TRR*sind(tTRdl1) + OTRdl(2),'Color','green');
+line(TRR*cosd(tTRdl2) + OTRdl(1), TRR*sind(tTRdl2) + OTRdl(2),'Color','green');
+line(TRR*cosd(tTRtl1) + OTRtl(1), TRR*sind(tTRtl1) + OTRtl(2),'Color','green');
+line(TRR*cosd(tTRtl2) + OTRtl(1), TRR*sind(tTRtl2) + OTRtl(2),'Color','green');
 % Cut radius
 tCUTtr = linspace(0+TRalf,90-TRalf);
 tCUTdr = linspace(-90+TRalf,0-TRalf);
 tCUTdl = linspace(-180+TRalf,-90-TRalf);
 tCUTtl = linspace(180-TRalf,90+TRalf);
-line(CutRad*cosd(tCUTtr)+Otr(1),CutRad*sind(tCUTtr)+Otr(2),'Color','blue');
-line(CutRad*cosd(tCUTdr)+Odr(1),CutRad*sind(tCUTdr)+Odr(2),'Color','blue');
-line(CutRad*cosd(tCUTdl)+Odl(1),CutRad*sind(tCUTdl)+Odl(2),'Color','blue');
-line(CutRad*cosd(tCUTtl)+Otl(1),CutRad*sind(tCUTtl)+Otl(2),'Color','blue');
+line(CutRad*cosd(tCUTtr)+Otr(1),CutRad*sind(tCUTtr)+Otr(2),'Color','green');
+line(CutRad*cosd(tCUTdr)+Odr(1),CutRad*sind(tCUTdr)+Odr(2),'Color','green');
+line(CutRad*cosd(tCUTdl)+Odl(1),CutRad*sind(tCUTdl)+Odl(2),'Color','green');
+line(CutRad*cosd(tCUTtl)+Otl(1),CutRad*sind(tCUTtl)+Otl(2),'Color','green');
 
 tOO = sqrt(Otr(1)*Otr(1) + Otr(2)*Otr(2));
 % Tranzaction line parametrs:
@@ -190,10 +191,10 @@ TRd_dr12 = [Odr(1)+dddx Odr(2)-dddy];
 TRd_dl12 = [-(Odr(1)+dddx) Odr(2)-dddy];
 TRd_tl12 = [-(Odr(1)+dddx) -(Odr(2)-dddy)];
 
-line([TRd_tr12(1) TRd_tr11(1)],[TRd_tr12(2) TRd_tr11(2)],'Color','green'); 
-line([TRd_dr12(1) TRd_dr11(1)],[TRd_dr12(2) TRd_dr11(2)],'Color','green'); 
-line([TRd_dl12(1) TRd_dl11(1)],[TRd_dl12(2) TRd_dl11(2)],'Color','green'); 
-line([TRd_tl12(1) TRd_tl11(1)],[TRd_tl12(2) TRd_tl11(2)],'Color','green'); 
+line([TRd_tr12(1) TRd_tr11(1)],[TRd_tr12(2) TRd_tr11(2)],'Color','blue'); 
+line([TRd_dr12(1) TRd_dr11(1)],[TRd_dr12(2) TRd_dr11(2)],'Color','blue'); 
+line([TRd_dl12(1) TRd_dl11(1)],[TRd_dl12(2) TRd_dl11(2)],'Color','blue'); 
+line([TRd_tl12(1) TRd_tl11(1)],[TRd_tl12(2) TRd_tl11(2)],'Color','blue'); 
 
 TRd_tr22(2) =  TRd_tr12(2) - dY2 + dX2;
 TRd_tr21(2) =  TRd_tr11(2) - dY2 + dX2;
@@ -225,13 +226,24 @@ y2 = TRd_tr11(2);
 
 a = (y2-y1)/(x2-x1);
 b = y1-a*x1;
-hTranz = sqrt((b*b)/(a*a+1));
+hTranzX = sqrt((b*b)/(a*a+1));
 
 
-line([TRd_tr22(2) TRd_tr21(2)],[TRd_tr22(1) TRd_tr21(1)],'Color','green'); 
-line([TRd_dr22(2) TRd_dr21(2)],[TRd_dr22(1) TRd_dr21(1)],'Color','green'); 
-line([TRd_dl22(2) TRd_dl21(2)],[TRd_dl22(1) TRd_dl21(1)],'Color','green'); 
-line([TRd_tl22(2) TRd_tl21(2)],[TRd_tl22(1) TRd_tl21(1)],'Color','green'); 
+
+line([TRd_tr22(2) TRd_tr21(2)],[TRd_tr22(1) TRd_tr21(1)],'Color','blue'); 
+line([TRd_dr22(2) TRd_dr21(2)],[TRd_dr22(1) TRd_dr21(1)],'Color','blue'); 
+line([TRd_dl22(2) TRd_dl21(2)],[TRd_dl22(1) TRd_dl21(1)],'Color','blue'); 
+line([TRd_tl22(2) TRd_tl21(2)],[TRd_tl22(1) TRd_tl21(1)],'Color','blue'); 
+
+x1 = TRd_tr22(1);
+x2 = TRd_tr21(1);
+
+y1 = TRd_tr22(2);
+y2 = TRd_tr21(2);
+
+a = (y2-y1)/(x2-x1);
+b = y1-a*x1;
+hTranzY = sqrt((b*b)/(a*a+1));
 %***************************************************************
 %***************************************************************
 %***************************************************************
@@ -278,7 +290,7 @@ end
 %***********************SECOND CUT******************************
 %***************************************************************
 CurAng = CurAng - 1;
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel_Small(CutSizeX,CutSizeY,CutRad,L,dAlfa,Betta(CurAng),TRalf,OTRtr,TRR,hTranz,TRoo,TRlen,TRd_tr12(1),FC_en_d,tOO);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel_Small(CutSizeX,CutSizeY,CutRad,L,dAlfa,Betta(CurAng),TRalf,OTRtr,TRR,hTranzX,hTranzY,TRoo,TRlen,TRd_tr12(1),TRd_tr22,FC_en_d,tOO,ShiftLen);
 
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
@@ -345,7 +357,7 @@ cd(curdir);
 %**********************CALC ROLL********************************
 %***************************************************************
 CurAng = 1;
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel(SimbSizeX,SimbSizeY,SimbRad,LR,dAlfa,0,OTRtr,tOO);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = SQRT_Angel(SimbSizeX,SimbSizeY,SimbRad,LR,dAlfa,0,Otr,tOO);
 CurAng = TR_End;
 %***************************************************************
 %***********************PLOT ROLL*******************************
