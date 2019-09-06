@@ -46,11 +46,14 @@ function [Bang,Ax,Ay,Bx,By] = CutCircle(ang,a,r,L,out,alf,opi,d,BangInvert)
         end
     end
     Bang = atand(Cy/sqrt(Cr*Cr-Cy*Cy));
+    Bx   = Cx+sqrt(Cr*Cr-Cy*Cy);
+    %{
     if (Cx>L)
-        Bx   = Cx-sqrt(Cr*Cr-Cy*Cy);
+        Bx   = Cx+sqrt(Cr*Cr-Cy*Cy);
     else
         Bx   = Cx+sqrt(Cr*Cr-Cy*Cy);
     end
+    %}
     By   = 0;
     Ax   = Bx-L*cosd(Bang);
     Ay   = L*sind(Bang);    

@@ -24,7 +24,7 @@ PlotData = 0;
 % Simbol Data:
 SimbSize = 923;     % mm
 SimbRad  = 51;      % mm
-CutRad   = 68;      % mm 69
+CutRad   = 68;      % mm 68
 ShiftLen = 20;      % mm
 RollAdd  = 20;      % mm24
 CutAdd   = 12;      % mm
@@ -39,12 +39,6 @@ MinCutRad   = 45;   % mm (45)
 dAlfa   = 0.001;	% delta alfa
 DotAcc  = 200;      % Delta dot in output
 FullAng = 720;      % Full revolv of curve, grad
-% EXPEREMENTAL:
-% Driver data
-MstAcc    = 1;      % Master acceleration, u/s^2
-SupMstVel = 1;      % grad/sec
-LowVel    = 0.1;    % Low speed of tabel
-MaxVel    = 1;      % Max speed of tabel
 %***************************************************************
 %***********************INTERNAL********************************
 %***************************************************************
@@ -475,7 +469,6 @@ LoadBar(BarMax,BarCur);
 %**************************************************************************
 %**************************************SECOND CUT**************************
 %**************************************************************************
-
 CurAng = CurAng - 1;
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz,AdOO,AdR);
 for i = 1:1:TR_End
@@ -490,7 +483,6 @@ end
 CurAng = CurAng + TR_End;
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
-
 %**************************************************************************
 %***********************PLOT CUT*******************************************
 %**************************************************************************
@@ -518,52 +510,6 @@ end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
 %***************************************************************
-%*********************VELOCYTY CHART****************************
-%***************************************************************
-%{
-for i = 1:1:CurAng-1
-    VelChart(i) = 1;                    % 1 u/s - base master velocyty
-    TimeLine(i) = Betta(i)/SupMstVel;   % Time line for table angel
-end
-if (CutType == 0)
-	VelDot = 5;
-elseif(CutType == 1)
-    VelDot = 3;
-end
-MstAcc = 0.1;
-ttr = (MaxVel-LowVel)/MstAcc;
-Str  = MaxVel*ttr-MstAcc*ttr*ttr/2;    % length of velosity chenge 
-nStr = fix(Str/dAlfa);                 % nomber of points for Str
-
-for i=1:1:VelDot
-  for j=-nStr:1:0
-    VelAng = VelPoint(i) + j;
-    VelChart(VelAng) = (LowVel-MaxVel)*(nStr+j)/nStr + MaxVel;
-  end
-  for j=0:1:nStr
-    VelAng = VelPoint(i) + j;
-    VelChart(VelAng) = (MaxVel-LowVel)*j/nStr + LowVel;
-  end
-end
-
-BarCur = BarCur + 1;
-LoadBar(BarMax,BarCur);
-
-%***************************************************************
-%**********************CALC TABLE CAM***************************
-%***************************************************************
-OUT_Table(1) = VelChart(1)*TimeLine(1);
-for i = 2:1:CurAng-1
-    OUT_Table(i) = OUT_Table(i-1)+ VelChart(i)*(TimeLine(i)-TimeLine(i-1));
-end
-subplot(2,1,1);
-plot(VelChart(1:CurAng-1));
-grid;
-subplot(2,1,2);
-plot(OUT_Table(1:CurAng-1));
-grid;
-%}
-%***************************************************************
 %********************SAVE START COND****************************
 %***************************************************************
 cd([curdir '\OUTPUT']);
@@ -573,10 +519,6 @@ cd(curdir);
 %***************************************************************
 %*******************SAVE CUT TO CAM*****************************
 %***************************************************************
-
-
-
-
 norm_bx = OUT_Bx(1);
 norm_ba = OUT_Bang(1);
 norm_al = Betta(1);
@@ -598,14 +540,10 @@ WrightCamToFile(OUT_Table,Betta,'CAM_Table.txt',(CurAng-1),DotAcc);
 cd(curdir);
 BarCur=BarCur + 1;
 LoadBar(BarMax,BarCur);
-
-
-
 %***************************************************************
 %**********************CALC ROLL********************************
 %***************************************************************
 CurAng = 1;
-%TR_Bett
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim,TR_Extremums] = Triangle(SimbSize,SimbRad,LR,dAlfa,0,0);
 CurAng = TR_End;
 %***************************************************************
@@ -629,7 +567,9 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
+if (plotWork == 0)
+    line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
+end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
 
