@@ -35,7 +35,7 @@ LR = 307;           % Carriage lenhth, mm (last - 339)
 CutInputAng = 5;   % grad
 CutLagAng   = 1;    % grad
 MinCutRad   = 45;   % mm (45)
-FSCR        = 800;  % mm (radius of side cut)403
+FSCR        = 500;  % mm (radius of side cut)403
 CutType     = 0;    % 0 - withcut at side, 1 - without
 % Calc Data:
 dAlfa   = 0.001;	  % delta alfa
