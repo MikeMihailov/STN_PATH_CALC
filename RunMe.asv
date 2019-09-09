@@ -35,7 +35,7 @@ LR = 307;           % Carriage lenhth, mm (last - 339)
 CutInputAng = 5;   % grad
 CutLagAng   = 1;    % grad
 MinCutRad   = 45;   % mm (45)
-FSCR        = 800;  % mm (radius of side cut)403
+FSCR        = 1464;  % mm (radius of side cut)403
 CutType     = 0;    % 0 - withcut at side, 1 - without
 % Calc Data:
 dAlfa   = 0.001;	  % delta alfa
@@ -356,7 +356,7 @@ LoadBar(BarMax,BarCur);
 %********************START CONDITION****************************
 %***************************************************************
 x = sqrt(L*L/(1+cotd(CIA)*cotd(CIA)));
-xI = L*sind(CIA);
+xI = L*sind(CIA)
 y = -cotd(CIA)*sqrt(L*L/(1+cotd(CIA)*cotd(CIA)));
 if (CutType == 0)
     Bx = x-FCT_b;

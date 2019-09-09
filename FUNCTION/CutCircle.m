@@ -4,13 +4,15 @@
 %                               CutCircle
 %  This function calc position of points A and B in polar coordinate.
 % Input:
-%   ang  - the angel of table turning, grad
-%   a    - shift of circle center, mm
-%   r    - circle radius, mm
-%   L    - from center of carriet to end of scissors, mm
-%   out  - 1 - outline or 0 - inline circle
-%   alf  - angle betwen shhift line and zero line of table
-%   opi  - 1 - Co in 0-pi, 0 - Co in pi-3pi
+%   ang        - the angel of table turning, grad
+%   a          - shift of circle center, mm
+%   r          - circle radius, mm
+%   L          - from center of carriet to end of scissors, mm
+%   out        - 1 - outline or 0 - inline circle
+%   alf        - angle betwen shhift line and zero line of table
+%   opi        - 1 - Co in 0-pi, 0 - Co in pi-3pi
+%   d          - 1 - invert Cx
+%   BangInvert - 1 - invert Bang
 % Output:
 %   Bang - angel of carriet turning
 %   Ax   - OX position of dot A
@@ -24,23 +26,23 @@ function [Bang,Ax,Ay,Bx,By] = CutCircle(ang,a,r,L,out,alf,opi,d,BangInvert)
     else
         alfa = ang;
     end
-        
+
     if (opi == 0)
         Cy = a*sind(alfa-alf);
-        Cx = a*cosd(alfa-alf);  
+        Cx = a*cosd(alfa-alf);
     elseif(opi == 1)
         Cy = a*cosd(alfa-alf);
         Cx = a*sind(alfa-alf);
     end
-    
+
     if (d==1)
         Cx = Cx*(-1);
     end
-   
+
     if (out == 0)
         Cr = L-r;
     elseif(out == 1)
-        Cr = L+r; 
+        Cr = L+r;
         if(Cy<0)
             Cy=Cy*(-1);
         end
@@ -55,12 +57,16 @@ function [Bang,Ax,Ay,Bx,By] = CutCircle(ang,a,r,L,out,alf,opi,d,BangInvert)
     end
     %}
     By   = 0;
-    Ax   = Bx-L*cosd(Bang);
-    Ay   = L*sind(Bang);    
+    if (Bx < 0)
+        Ax   = Bx+L*cosd(Bang);
+    else
+        Ax   = Bx-L*cosd(Bang);
+    end
+    Ay   = L*sind(Bang);
     if (BangInvert == 1)
         Bang = (-1)*Bang;
         Ay = (-1)*Ay;
-    end;
+    end
 end
 %**************************************************************************
 %**************************************************************************
