@@ -22,25 +22,33 @@ PlotData         = 0;
 %**************************INPUT********************************
 %***************************************************************
 % Simbol Data:
-SimbSize = 921;     % mm 921
-SimbRad  = 51;      % mm
-CutRad   = 69;      % mm
-ShiftLen = 20;      % mm
-RollAdd  = 24;      % mm
-CutAdd   = 12;      % mm
+SimbSize      = 921;  % mm
+SimbRad       = 51;   % mm
+CutRad        = 69;   % mm
+
+ShiftLenLeft  = 20;   % mm
+ShiftLenRight = 40;   % mm
+
+ShiftLen      = ShiftLenLeft;   % mm
+
+RollAdd       = 24;   % mm
+CutAdd        = 12;   % mm
+CutRadTurn    = 0;  % grad new
+CutRadShift   = 0;    % mm   new
+CutTurnShift  = 100;  % mm   new
 % Machine Data:
-L  = 402;           % From center of carriet to end of scissors(���� 512)
-LR = 307;           % Carriage lenhth, mm (last - 339)
+L  = 402;            % From center of carriet to end of scissors
+LR = 307;            % Carriage lenhth, mm
 % Cut Tech Proc Data:
-CutInputAng = 5;   % grad
-CutLagAng   = 1;    % grad
-MinCutRad   = 45;   % mm (45)
-FSCR        = 500;  % mm (radius of side cut)403
-CutType     = 0;    % 0 - withcut at side, 1 - without
+CutInputAng = 5;     % grad
+CutLagAng   = 1;     % grad
+MinCutRad   = 45;    % mm
+FSCR        = 500;   % mm, radius of side cut
+CutType     = 0;     % 0 - withcut at side, 1 - without
 % Calc Data:
-dAlfa   = 0.001;	  % delta alfa
-DotAcc  = 200;      % Delta dot in output
-FullAng = 720;      % Full revolv of curve, grad
+dAlfa   = 0.001;	   % Delta alfa
+DotAcc  = 200;       % Delta dot in output
+FullAng = 720;       % Full revolv of curve, grad
 %***************************************************************
 %***********************INTERNAL********************************
 %***************************************************************
@@ -123,7 +131,7 @@ RlB = [(SimbSize/2-SimbRad*s3) (-h+SimbRad)];                   % Center of righ
 RlC = [0 (H-h-2*SimbRad)];                                      % Center of top radius, mm
 line(SimbRad*cos(thetaA)+RlA(1),SimbRad*sin(thetaA)+RlA(2));    % Draw left redius
 line(SimbRad*cos(thetaB)+RlB(1),SimbRad*sin(thetaB)+RlB(2));    % Draw right radius
-line(SimbRad*cos(thetaC)+RlC(1),SimbRad*sin(thetaC)+RlC(2));	% Draw top radius
+line(SimbRad*cos(thetaC)+RlC(1),SimbRad*sin(thetaC)+RlC(2));  	% Draw top radius
 RlA1 = [-(SimbSize/2-SimbRad*s3) -h];                           % Left-down
 RlB1 = [(SimbSize/2-SimbRad*s3) -h];                            % Right-down
 RlB2 = [(RlB1(1)+(s3/2)*SimbRad) (RlB1(2)+3*SimbRad/2)];        % Right-up
@@ -134,85 +142,122 @@ line([RlA1(1) RlB1(1)],[RlA1(2) RlB1(2)]);                      % Draw line AB
 line([RlB2(1) RlC1(1)],[RlB2(2) RlC1(2)]);                      % Draw line BC
 line([RlC2(1) RlA2(1)],[RlC2(2) RlA2(2)]);                      % Draw line AC
 %*************************CUT**********************************
+Or  = sqrt(RlA(1)*RlA(1) + RlA(2)*RlA(2));
+Ors = sqrt(RlA(1)*RlA(1) + RlA(2)*RlA(2))+CutRadShift-CutTurnShift;
+
+RlSA = [-(Ors*sind(60-CutRadTurn)+CutTurnShift*sind(60)) -(Ors*cosd(60-CutRadTurn)+CutTurnShift*cosd(60))];
+RlSB = [  Ors*sind(60+CutRadTurn)+CutTurnShift*sind(60)  -(Ors*cosd(60+CutRadTurn)+CutTurnShift*cosd(60))];
+RlSC = [-(Ors*sind(CutRadTurn))                            CutTurnShift+Ors*cosd(CutRadTurn)];
+
+
 dx = RollAdd*s3/2;                                              % cut-roll delta x
 dy = RollAdd/2;                                                 % cut-roll delta
-ddx = ShiftLen * sind(30);                                      % shift side for small radius tranzaction
-ddy = ShiftLen * cosd(30);                                      % shift side for small radius tranzaction
-CtA1 = [RlA(1)+ShiftLen (RlA1(2)-RollAdd)];                     % ! Left-down
-CtB1 = [RlB(1)-ShiftLen (RlB1(2)-RollAdd)];                     % ! Right-down
-CtB2 = [RlB2(1)+dx-ddx RlB2(2)+dy+ddy];                         % ! Right-up
-CtC1 = [RlC1(1)+dx+ddx RlC1(2)+dy-ddy];                         % ! Top-right
-CtC2 = [RlC2(1)-dx-ddx RlC2(2)+dy-ddy];                         % ! Top-left
-CtA2 = [RlA2(1)-dx+ddx RlA2(2)+dy+ddy];                         % ! Left-up
+
+ddxLeft = ShiftLenLeft * sind(30);                              % shift side left for small radius tranzaction
+ddyLeft = ShiftLenLeft * cosd(30);                              % shift side left for small radius tranzaction
+ddxRight = ShiftLenRight * sind(30);                            % shift side right for small radius tranzaction
+ddyRight = ShiftLenRight * cosd(30);                            % shift side right for small radius tranzaction
+
+CtA1 = [RlA(1)+ShiftLenRight (RlA1(2)-RollAdd)];                % ! Left-down
+CtB1 = [RlB(1)-ShiftLenLeft (RlB1(2)-RollAdd)];                 % ! Right-down
+CtB2 = [RlB2(1)+dx-ddxRight RlB2(2)+dy+ddyRight];               % ! Right-up
+CtC1 = [RlC1(1)+dx+ddxLeft RlC1(2)+dy-ddyLeft];                 % ! Top-right
+CtC2 = [RlC2(1)-dx-ddxRight RlC2(2)+dy-ddyRight];               % ! Top-left
+CtA2 = [RlA2(1)-dx+ddxLeft RlA2(2)+dy+ddyLeft];                 % ! Left-up
+
 line([CtA1(1) CtB1(1)],[CtA1(2) CtB1(2)]);                      % ! Draw line AB
 line([CtB2(1) CtC1(1)],[CtB2(2) CtC1(2)]);                      % ! Draw line BC
 line([CtC2(1) CtA2(1)],[CtC2(2) CtA2(2)]);                      % ! Draw line AC
 
 % Tranzaction radius parametrs:
-AdA  = [RlA(1)+ShiftLen RlA(2)+ShiftLen*tand(30)];
-AdB  = [RlB(1)-ShiftLen RlB(2)+ShiftLen*tand(30)];
-AdC  = [RlC(1) RlC(2)-ShiftLen/sind(60)];
-AdR  = AdB(2) - CtB1(2);
-AdOO = sqrt(AdA(1)*AdA(1)+AdA(2)*AdA(2));
+AdALeft   = [RlA(1)+ShiftLenLeft RlA(2)+ShiftLenLeft*tand(30)];
+AdARight  = [RlA(1)+ShiftLenRight RlA(2)+ShiftLenRight*tand(30)];
+AdBLeft   = [RlB(1)-ShiftLenLeft RlB(2)+ShiftLenLeft*tand(30)];
+AdBRight  = [RlB(1)-ShiftLenRight RlB(2)+ShiftLenRight*tand(30)];
+AdCLeft   = [RlC(1) RlC(2)-ShiftLenLeft/sind(60)];
+AdCRight  = [RlC(1) RlC(2)-ShiftLenRight/sind(60)];
+AdRLeft   = AdBLeft(2)  - CtB1(2);
+AdRRight  = AdBRight(2) - CtB1(2);
+AdOOLeft  = sqrt(AdALeft(1)*AdALeft(1)+AdALeft(2)*AdALeft(2));
+AdOORight = sqrt(AdARight(1)*AdARight(1)+AdARight(2)*AdARight(2));
+xxxLeft   = (ShiftLenLeft/sind(60)*CutRad)/(AdRLeft-CutRad);
+xxxRight  = (ShiftLenRight/sind(60)*CutRad)/(AdRRight-CutRad);
+alfLeft   = 60 - acosd(CutRad/xxxLeft);
+alfRight  = 60 - acosd(CutRad/xxxRight);
 
-xxx = (ShiftLen/sind(60)*CutRad)/(AdR-CutRad);
-alf = 60 - acosd(CutRad/xxx);
+%1
+thetaAdA = linspace(270,270-alfRight);
+line(AdRRight*cosd(thetaAdA)+AdARight(1),AdRRight*sind(thetaAdA)+AdARight(2),'Color','red');
+%2
+thetaAdA = linspace(270,270+alfLeft);
+line(AdRLeft*cosd(thetaAdA)+AdBLeft(1),AdRLeft*sind(thetaAdA)+AdBLeft(2),'Color','red');
+%3
+thetaAdA = linspace(30,30-alfRight);
+line(AdRRight*cosd(thetaAdA)+AdBRight(1),AdRRight*sind(thetaAdA)+AdBRight(2),'Color','red');
+%4
+thetaAdA = linspace(30+alfLeft,30);
+line(AdRLeft*cosd(thetaAdA)+AdCLeft(1),AdRLeft*sind(thetaAdA)+AdCLeft(2),'Color','red');
+%5
+thetaAdA = linspace(150-alfRight,150);
+line(AdRRight*cosd(thetaAdA)+AdCRight(1),AdRRight*sind(thetaAdA)+AdCRight(2),'Color','red');
+%6
+thetaAdA = linspace(150+alfLeft,150);
+line(AdRLeft*cosd(thetaAdA)+AdALeft(1),AdRLeft*sind(thetaAdA)+AdALeft(2),'Color','red');
 
-thetaAdA = linspace(270,270-alf);
-line(AdR*cosd(thetaAdA)+AdA(1),AdR*sind(thetaAdA)+AdA(2),'Color','red');
-thetaAdA = linspace(150+alf,150);
-line(AdR*cosd(thetaAdA)+AdA(1),AdR*sind(thetaAdA)+AdA(2),'Color','red');
-thetaAdA = linspace(270,270+alf);
-line(AdR*cosd(thetaAdA)+AdB(1),AdR*sind(thetaAdA)+AdB(2),'Color','red');
-thetaAdA = linspace(30,30-alf);
-line(AdR*cosd(thetaAdA)+AdB(1),AdR*sind(thetaAdA)+AdB(2),'Color','red');
-thetaAdA = linspace(150-alf,150);
-line(AdR*cosd(thetaAdA)+AdC(1),AdR*sind(thetaAdA)+AdC(2),'Color','red');
-thetaAdA = linspace(30+alf,30);
-line(AdR*cosd(thetaAdA)+AdC(1),AdR*sind(thetaAdA)+AdC(2),'Color','red');
+thetaACut = linspace(150+alfLeft,270-alfRight);      % Ends of radius A
+thetaBCut = linspace(-90+alfLeft,30-alfRight);       % Ends of radius B
+thetaCCut = linspace(30+alfLeft,150-alfRight);       % Ends of radius C
 
-thetaACut = linspace(150+alf,270-alf);   % Ends of radius A
-thetaBCut = linspace(-90+alf,30-alf);      % Ends of radius B
-thetaCCut = linspace(30+alf,150-alf);     % Ends of radius C
+line(CutRad*cosd(thetaACut)+RlSA(1),CutRad*sind(thetaACut)+RlSA(2));      % Draw A left redius
+line(CutRad*cosd(thetaBCut)+RlSB(1),CutRad*sind(thetaBCut)+RlSB(2));      % Draw B right radius
+line(CutRad*cosd(thetaCCut)+RlSC(1),CutRad*sind(thetaCCut)+RlSC(2));      % Draw C top radius
 
-line(CutRad*cosd(thetaACut)+RlA(1),CutRad*sind(thetaACut)+RlA(2));      % Draw A left redius
-line(CutRad*cosd(thetaBCut)+RlB(1),CutRad*sind(thetaBCut)+RlB(2));      % Draw B right radius
-line(CutRad*cosd(thetaCCut)+RlC(1),CutRad*sind(thetaCCut)+RlC(2));      % Draw C top radius
+dddxLeft    = 2*AdRLeft*sind(alfLeft/2)*cosd(alfLeft/2);
+dddxRight   = 2*AdRRight*sind(alfRight/2)*cosd(alfRight/2);
+dddyLeft    = 2*AdRLeft*sind(alfLeft/2)*sind(alfLeft/2);
+dddyRight   = 2*AdRRight*sind(alfRight/2)*sind(alfRight/2);
+dddx60Left  = 2*AdRLeft*sind(alfLeft/2)*cosd(alfLeft/2+60);
+dddx60Right = 2*AdRRight*sind(alfRight/2)*cosd(alfRight/2+60);
+dddy60Left  = 2*AdRLeft*sind(alfLeft/2)*sind(alfLeft/2+60);
+dddy60Right = 2*AdRRight*sind(alfRight/2)*sind(alfRight/2+60);
+dddxCLeft   = 2*AdRLeft*sind(alfLeft/2)*cosd(60-alfLeft/2);
+dddxCRight  = 2*AdRRight*sind(alfRight/2)*cosd(60-alfRight/2);
+dddyCLeft   = 2*AdRLeft*sind(alfLeft/2)*sind(60-alfLeft/2);
+dddyCRight  = 2*AdRRight*sind(alfRight/2)*sind(60-alfRight/2);
 
-dddx   = 2*AdR*sind(alf/2)*cosd(alf/2);
-dddy   = 2*AdR*sind(alf/2)*sind(alf/2);
-dddx60 = 2*AdR*sind(alf/2)*cosd(alf/2+60);
-dddy60 = 2*AdR*sind(alf/2)*sind(alf/2+60);
-dddxC  = 2*AdR*sind(alf/2)*cosd(60-alf/2);
-dddyC  = 2*AdR*sind(alf/2)*sind(60-alf/2);
+TranzA11 = [CtA1(1)-dddxRight CtA1(2)+dddyRight];       % right
+TranzA22 = [CtA2(1)-dddx60Left CtA2(2)-dddy60Left];     % left
+TranzB11 = [CtB1(1)+dddxLeft CtB1(2)+dddyLeft];         % left
+TranzB22 = [CtB2(1)+dddx60Right CtB2(2)-dddy60Right];   % right
+TranzC11 = [CtC1(1)-dddxCLeft CtC1(2)+dddyCLeft];       % left
+TranzC22 = [CtC2(1)+dddxCRight CtC2(2)+dddyCRight];     % right
 
-TranzA11 = [CtA1(1)-dddx CtA1(2)+dddy];
-TranzA22 = [CtA2(1)-dddx60 CtA2(2)-dddy60];
-TranzB11 = [CtB1(1)+dddx CtB1(2)+dddy];
-TranzB22 = [CtB2(1)+dddx60 CtB2(2)-dddy60];
-TranzC11 = [CtC1(1)-dddxC CtC1(2)+dddyC];
-TranzC22 = [CtC2(1)+dddxC CtC2(2)+dddyC];
+dddxLeft    = 2*CutRad*sind(alfLeft/2)*cosd(alfLeft/2);
+dddxRight   = 2*CutRad*sind(alfRight/2)*cosd(alfRight/2);
+dddyLeft    = 2*CutRad*sind(alfLeft/2)*sind(alfLeft/2);
+dddyRight   = 2*CutRad*sind(alfRight/2)*sind(alfRight/2);
+dddx60Left  = 2*CutRad*sind(alfLeft/2)*cosd(alfLeft/2+60);
+dddx60Right = 2*CutRad*sind(alfRight/2)*cosd(alfRight/2+60);
+dddy60Left  = 2*CutRad*sind(alfLeft/2)*sind(alfLeft/2+60);
+dddy60Right = 2*CutRad*sind(alfRight/2)*sind(alfRight/2+60);
+dddxCLeft   = 2*CutRad*sind(alfLeft/2)*cosd(60-alfLeft/2);
+dddxCRight  = 2*CutRad*sind(alfRight/2)*cosd(60-alfRight/2);
+dddyCLeft   = 2*CutRad*sind(alfLeft/2)*sind(60-alfLeft/2);
+dddyCRight  = 2*CutRad*sind(alfRight/2)*sind(60-alfRight/2);
 
-dddx   = 2*CutRad*sind(alf/2)*cosd(alf/2);
-dddy   = 2*CutRad*sind(alf/2)*sind(alf/2);
-dddx60 = 2*CutRad*sind(alf/2)*cosd(alf/2+60);
-dddy60 = 2*CutRad*sind(alf/2)*sind(alf/2+60);
-dddxC  = 2*CutRad*sind(alf/2)*cosd(60-alf/2);
-dddyC  = 2*CutRad*sind(alf/2)*sind(60-alf/2);
+TranzA21 = [RlA(1)-CutRad*cosd(30)-dddx60Left  RlA(2)+CutRad*sind(30)-dddy60Left];  % Left
+TranzB12 = [RlB(1)+dddxLeft                    RlB(2)-CutRad+dddyLeft];             % Left
+TranzB21 = [RlB(1)+CutRad*cosd(30)+dddx60Right RlB(2)+CutRad*sind(30)-dddy60Right]; % Right
+TranzC12 = [RlC(1)+CutRad*cosd(30)-dddxCLeft   RlC(2)+CutRad*sind(30)+dddyCLeft];   % Left
+TranzC21 = [RlC(1)-CutRad*cosd(30)+dddxCRight  RlC(2)+CutRad*sind(30)+dddyCRight];  % Right
+TranzA12 = [RlA(1)-dddxRight                   RlA(2)-CutRad+dddyRight];            % Right
 
-TranzA12 = [RlA(1)-dddx RlA(2)-CutRad+dddy];
-TranzA21 = [RlA(1)-CutRad*cosd(30)-dddx60 RlA(2)+CutRad*sind(30)-dddy60];
-TranzB12 = [RlB(1)+dddx RlB(2)-CutRad+dddy];
-TranzB21 = [RlB(1)+CutRad*cosd(30)+dddx60 RlB(2)+CutRad*sind(30)-dddy60];
-TranzC12 = [RlC(1)+CutRad*cosd(30)-dddxC RlC(2)+CutRad*sind(30)+dddyC];
-TranzC21 = [RlC(1)-CutRad*cosd(30)+dddxC RlC(2)+CutRad*sind(30)+dddyC];
-
-line([TranzA12(1) TranzA11(1)],[TranzA12(2) TranzA11(2)],'Color','green');  % ! Draw line AB
-line([TranzA21(1) TranzA22(1)],[TranzA21(2) TranzA22(2)],'Color','green');  % ! Draw line AB
-line([TranzB12(1) TranzB11(1)],[TranzB12(2) TranzB11(2)],'Color','green');  % ! Draw line AB
-line([TranzB21(1) TranzB22(1)],[TranzB21(2) TranzB22(2)],'Color','green');  % ! Draw line AB
-line([TranzC12(1) TranzC11(1)],[TranzC12(2) TranzC11(2)],'Color','green');  % ! Draw line AB
-line([TranzC21(1) TranzC22(1)],[TranzC21(2) TranzC22(2)],'Color','green');  % ! Draw line AB
+line([TranzA12(1) TranzA11(1)],[TranzA12(2) TranzA11(2)],'Color','green');  % ! Draw line AB right
+line([TranzB12(1) TranzB11(1)],[TranzB12(2) TranzB11(2)],'Color','green');  % ! Draw line AB left
+line([TranzB21(1) TranzB22(1)],[TranzB21(2) TranzB22(2)],'Color','green');  % ! Draw line AB right
+line([TranzC12(1) TranzC11(1)],[TranzC12(2) TranzC11(2)],'Color','green');  % ! Draw line AB left
+line([TranzC21(1) TranzC22(1)],[TranzC21(2) TranzC22(2)],'Color','green');  % ! Draw line AB rifht
+line([TranzA21(1) TranzA22(1)],[TranzA21(2) TranzA22(2)],'Color','green');  % ! Draw line AB left
 
 x1 = TranzA12(1);
 x2 = TranzA11(1);
@@ -641,6 +686,12 @@ LoadBar(BarMax,BarCur);
 %*************************SECOND CUT****************************
 %***************************************************************
 CurAng = CurAng - 1;
+%!!!TEMPORY!!!
+alf  = alfLeft;
+AdB  = AdBLeft;
+AdR  = AdRLeft;
+AdOO = AdOOLeft;
+%!!!TEMPORY!!!
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz,AdOO,AdR);
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
@@ -663,7 +714,7 @@ for i = 1:1:CurAng-1
     xx(i)  = rhi(i)*cosd(rho(i));
     yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1),'color','k');
 end
 BarCur = BarCur + 1;
@@ -675,7 +726,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
