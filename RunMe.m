@@ -26,16 +26,14 @@ SimbSize      = 921;  % mm
 SimbRad       = 51;   % mm
 CutRad        = 69;   % mm
 
-ShiftLenLeft  = 35;   % mm new �� ������� ������ ������� ����� ����������� ������
-ShiftLenRight = 35;   % mm new
+ShiftLenLeft  = 45;   % mm new �� ������� ������ ������� ����� ����������� ������
+ShiftLenRight = 45;   % mm new
 ShiftRadLeft  = 100;  % mm new ������ ��������
 ShiftRadRight = 100;  % mm new
 
-ShiftLen      = ShiftLenLeft;   % mm
-
 RollAdd       = 24;   % mm
 CutAdd        = 12;   % mm
-CutRadTurn    = 0.5;    % grad new
+CutRadTurn    = 0;    % grad new
 CutRadShift   = 0;    % mm   new
 CutTurnShift  = 100;  % mm   new
 % Machine Data:
@@ -690,22 +688,21 @@ LoadBar(BarMax,BarCur);
 %*************************SECOND CUT****************************
 %***************************************************************
 CurAng = CurAng - 1;
-%!!!TEMPORY!!!
-alf  = alfLeft;
-AdB  = AdBLeft;
-AdR  = ShiftRadLeft;
-AdOO = AdOOLeft;
-%!!!TEMPORY!!!
-%[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alf,ShiftLen,AdB,AdR,hTranz,AdOO,AdR);
-%for i = 1:1:TR_End
-%    OUT_Bang(CurAng+i) = TR_Bang(i);
-%    OUT_Ax(CurAng+i)   = TR_Ax(i);
-%    OUT_Ay(CurAng+i)   = TR_Ay(i);
-%    OUT_Bx(CurAng+i)   = TR_Bx(i);
-%    OUT_By(CurAng+i)   = TR_By(i);
-%    Betta(CurAng+i)    = TR_Alfa(i);
-%    DrawSim(CurAng+i)  = TR_Sim(i);
-%end
+
+%
+
+alfffLeft = atand(TranzA12(2)/TranzA12(1)) - atand(TranzA11(2)/TranzA11(1))
+
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranz,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12);
+for i = 1:1:TR_End
+    OUT_Bang(CurAng+i) = TR_Bang(i);
+    OUT_Ax(CurAng+i)   = TR_Ax(i);
+    OUT_Ay(CurAng+i)   = TR_Ay(i);
+    OUT_Bx(CurAng+i)   = TR_Bx(i);
+    OUT_By(CurAng+i)   = TR_By(i);
+    Betta(CurAng+i)    = TR_Alfa(i);
+    DrawSim(CurAng+i)  = TR_Sim(i);
+end
 CurAng = CurAng + TR_End;
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
