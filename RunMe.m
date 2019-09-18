@@ -149,6 +149,9 @@ RlSA = [-(Ors*sind(60-CutRadTurn)+CutTurnShift*sind(60)) -(Ors*cosd(60-CutRadTur
 RlSB = [  Ors*sind(60+CutRadTurn)+CutTurnShift*sind(60)  -(Ors*cosd(60+CutRadTurn)+CutTurnShift*cosd(60))];
 RlSC = [-(Ors*sind(CutRadTurn))                            CutTurnShift+Ors*cosd(CutRadTurn)];
 
+OSr  = sqrt(RlSA(1)*RlSA(1) + RlSA(2)*RlSA(2));
+OSra = atand(RlSA(1)/RlSA(2));
+
 dx = RollAdd*s3/2;                                    % cut-roll delta x
 dy = RollAdd/2;                                       % cut-roll delta
 
@@ -249,11 +252,17 @@ x1 = TranzA12(1);
 x2 = TranzA11(1);
 y1 = TranzA12(2);
 y2 = TranzA11(2);
-
 a = (y2-y1)/(x2-x1);
 b = y1-a*x1;
+hTranzRight = sqrt((b*b)/(a*a+1));
 
-hTranz = sqrt((b*b)/(a*a+1));
+x1 = TranzB12(1);
+x2 = TranzB11(1);
+y1 = TranzB12(2);
+y2 = TranzB11(2);
+a = (y2-y1)/(x2-x1);
+b = y1-a*x1;
+hTranzLeft  = sqrt((b*b)/(a*a+1));
 
 BarCur=BarCur + 1;                                              % Increment bar line
 LoadBar(BarMax,BarCur);                                         % Show current bar line
@@ -288,11 +297,7 @@ sy   = RlSC(2)-BisxCut+sr;
 sd   = sqrt(sx*sx+sy*sy);
 sdel = sd+CutRad-sr;
 sbet = atand(sx/sy);
-
 BisxCut = BisxCut + sdel;
-
-%FCA_r = FCA_r + sdel;
-%sCIA  = acosd((g+FCA_r)/(2*FCA_r));
 %***********************ANGLE***********************************
 g      = Blank_h*2 - BisxCut;
 FCA_r  = g/(2*cosd(CIA)-1);
@@ -302,7 +307,6 @@ FCA_dy = FCA_or*sind(30);
 FCA_A  = [-FCA_dx -FCA_dy];
 FCA_B  = [FCA_dx  -FCA_dy];
 FCA_C  = [0 (BisxCut-FCA_r)];
-
 
 if (PlotFirstCutTest == 1)
     tetta  = 60-CIA;
@@ -430,22 +434,6 @@ elseif(CutType == 1)
     FCA_tb_ang = FCA_end_tb_ang - FCA_st_tb_ang;
     FCT_tb_ang = 60 - FCA_tb_ang/2;
 end
-
-
-%te1 = (L+FCT_r)*sind(CIA);
-%te2 = (L+FCT_r)*cosd(CIA) - FCT_OO;
-%Dy = sqrt(te2*te2 + te1*te1);
-%FCA_st_tb_ang  = atand(te1/te2);
-%FCA_st_cr_ang  = FCA_st_tb_ang - CutInputAng;
-%FCA_end_tb_ang = acosd(FCT_dy/Dy);
-%FCA_tb_ang = FCA_end_tb_ang - FCA_st_tb_ang;
-%if (CutType == 0)
-%    FCS_tb_ang = StartTableAng*2;
-%    FCT_tb_ang = 60 - FCA_tb_ang/2 - FCS_tb_ang/2;
-%elseif(CutType == 1)
-%    FCT_tb_ang = 60 - FCA_tb_ang/2;
-%end
-
 BarCur=BarCur + 1;
 LoadBar(BarMax,BarCur);
 %***************************************************************
@@ -688,12 +676,9 @@ LoadBar(BarMax,BarCur);
 %*************************SECOND CUT****************************
 %***************************************************************
 CurAng = CurAng - 1;
+%alfffLeft = atand(TranzA12(2)/TranzA12(1)) - atand(TranzA11(2)/TranzA11(1))
 
-%
-
-alfffLeft = atand(TranzA12(2)/TranzA12(1)) - atand(TranzA11(2)/TranzA11(1))
-
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranz,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,OSr,OSra);
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
@@ -727,7 +712,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 0)
+if (plotWork == 1)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
