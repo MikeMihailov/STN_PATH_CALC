@@ -36,6 +36,8 @@ CutAdd        = 12;   % mm
 CutRadTurn    = 0;    % grad new
 CutRadShift   = 0;    % mm   new
 CutTurnShift  = 100;  % mm   new
+
+InvertRotate  = 0;
 % Machine Data:
 L  = 402;            % From center of carriet to end of scissors
 LR = 307;            % Carriage lenhth, mm
@@ -450,6 +452,7 @@ if (CutType == 0)
     for ang = st_d:dAlfa:en_d
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,0,opi,1,1);
+        OUT_Bx(CurAng) = -OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
         CurAng = CurAng + 1;
     end
@@ -524,6 +527,7 @@ if (CutType == 0)
     for ang = st_d:dAlfa:en_d
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,120,opi,1,1);
+        OUT_Bx(CurAng)=-OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
         CurAng = CurAng + 1;
     end
@@ -615,6 +619,7 @@ if (CutType == 0)
     for ang = st_d:dAlfa:en_d
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,60,opi,1,0);
+        OUT_Bx(CurAng)=-OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
         CurAng = CurAng + 1;
     end
@@ -738,6 +743,9 @@ for i = 1:1:CurAng-1
     OUT_Bx(i)    = 0 - OUT_Bx(i);
     %************************************
     OUT_Bang(i)  = OUT_Bang(i) - norm_ba;
+    if (InvertRotate == 1)
+        OUT_Bang(i)=-OUT_Bang(i);
+    end
     OUT_Table(i) = OUT_Table(i)- norm_tb;
 end
 cd([curdir '\OUTPUT']);
@@ -807,6 +815,9 @@ for i = 1:1:TR_End
     TR_Bx(i)   = 0 - TR_Bx(i);
     %************************************
     TR_Bang(i) = TR_Bang(i) - norm_ba;
+    if (InvertRotate == 1)
+        TR_Bang(i)=-TR_Bang(i);
+    end
 end
 cd([curdir '\OUTPUT']);
 addpath([curdir '\FUNCTION']);    % Include folder with extra functions
