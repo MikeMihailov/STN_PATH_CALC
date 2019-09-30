@@ -31,8 +31,6 @@ ShiftLenRight = 45;   % mm new
 ShiftRadLeft  = 100;  % mm new
 ShiftRadRight = 100;  % mm new
 
-CutFirstSecondDist = 0;
-
 RollAdd       = 24;   % mm
 CutAdd        = 12;   % mm
 CutRadTurn    = 0.5;    % grad new
@@ -304,9 +302,7 @@ sdel = sd+CutRad-sr;
 sbet = atand(sx/sy);
 BisxCut = BisxCut + sdel;
 %***********************ANGLE***********************************
-len = sqrt(RlSA(1)*RlSA(1)+RlSA(2)*RlSA(2))+CutRad+CutFirstSecondDist;
-fca = linspace(0,360);
-line(len*cosd(fca),len*sind(fca),'Color','red');
+len = sqrt(RlSA(1)*RlSA(1)+RlSA(2)*RlSA(2))+CutRad;
 
 g      = Blank_h*2 - BisxCut;
 FCA_r  = g/(2*cosd(CIA)-1);
@@ -461,7 +457,7 @@ if (CutType == 0)
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,0,opi,1,1);
         OUT_Bx(CurAng) = -OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -475,7 +471,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -493,7 +489,7 @@ for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
     [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,60,opi,0,0);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 st_d    = ang + dAlfa;
 en_d    = FCA_end_tb_ang-dAlfa;
@@ -501,13 +497,13 @@ ang_d   = 1;
 CurSide = CurSide + 1;
 for ang = st_d:dAlfa:en_d
     Betta(CurAng)    = ang;
-    %OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
-    %OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
-    %OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
-    %OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
+    OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
+    OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
+    OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
+    OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
     OUT_By(CurAng)   = 0;
     DrawSim(CurAng)  = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
     ang_d  = ang_d  + 1;
 end
 BarCur = BarCur + 1;
@@ -522,7 +518,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -536,7 +532,7 @@ if (CutType == 0)
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,120,opi,1,1);
         OUT_Bx(CurAng)=-OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -549,7 +545,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
 %************************4,5,6 Trevel***************************
 elseif(CutType == 1)
@@ -562,7 +558,7 @@ elseif(CutType == 1)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     st_d    = ang + dAlfa;
     en_d    = st_d + FCT_tb_ang;
@@ -572,7 +568,7 @@ elseif(CutType == 1)
         Betta(CurAng)   = ang;
 	      [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 3;
     LoadBar(BarMax,BarCur);
@@ -586,20 +582,20 @@ for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
     [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,180,opi,0,0);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 st_d    = ang + dAlfa;
 en_d    = st_d + FCA_tb_ang/2-dAlfa;
 ang_d   = 1;
 for ang = st_d:dAlfa:en_d
     Betta(CurAng)    = ang;
-    %OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
-    %OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
-    %OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
-    %OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
+    OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
+    OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
+    OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
+    OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
     OUT_By(CurAng)   = 0;
     DrawSim(CurAng)  = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
     ang_d  = ang_d  + 1;
 end
 BarCur = BarCur + 1;
@@ -614,7 +610,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -628,7 +624,7 @@ if (CutType == 0)
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,60,opi,1,0);
         OUT_Bx(CurAng)=-OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -641,7 +637,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -656,7 +652,7 @@ elseif(CutType == 1)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     st_d    = ang + dAlfa;
     en_d    = st_d + FCT_tb_ang;
@@ -666,7 +662,7 @@ elseif(CutType == 1)
         Betta(CurAng)    = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,0);
         DrawSim(CurAng)  = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 3;
     LoadBar(BarMax,BarCur);
@@ -685,7 +681,7 @@ for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
     [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,1,1,0);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 
 st_d = ang + dAlfa;
@@ -698,31 +694,26 @@ for ang = st_d:dAlfa:en_d
     OUT_Ax(CurAng) = -OUT_Ax(CurAng);
     OUT_Bx(CurAng) = -OUT_Bx(CurAng);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
+
+
+
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
-%***************************************************************
-%***************************************************************
-%***************************************************************
-CurAng = 1;
 
-firstCutStart = acosd(Blank_h/len);
-firstCutEnd   = 300+OSrb;
+
+firstCutStart = -StartTableAng;
+firstCutEnd   = en_d;
+
 for ang = firstCutStart:dAlfa:firstCutEnd
-   Betta(CurAng) = ang;
    OUT_Bang(CurAng) = 0;
-   OUT_Ax(CurAng)   = len;
+   OUT_Ax(CurAng)   = 0;
    OUT_Ay(CurAng)   = 0;
-   OUT_Bx(CurAng)   = len+L;
+   OUT_Bx(CurAng)   = 0;
    OUT_By(CurAng)   = 0;
    CurAng = CurAng + 1;
 end
-%***************************************************************
-%***************************************************************
-%***************************************************************
-
-
 
 
 %***************************************************************
@@ -767,7 +758,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
