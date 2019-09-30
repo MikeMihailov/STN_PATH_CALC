@@ -309,7 +309,7 @@ for ang = st_d:dAlfa:en_d
 end
 
 %LEFT CONER
-st_d = en_d+dAlfa;
+st_d = en_d;
 en_d = st_d+RadiusHalfLeft;
 for ang = st_d:dAlfa:en_d
     [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,240-OSra,0,0,0);

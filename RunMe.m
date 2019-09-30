@@ -26,14 +26,14 @@ SimbSize      = 921;  % mm
 SimbRad       = 51;   % mm
 CutRad        = 69;   % mm
 
-ShiftLenLeft  = 45;   % mm new �� ������� ������ ������� ����� ����������� ������
+ShiftLenLeft  = 45;   % mm new.
 ShiftLenRight = 45;   % mm new
-ShiftRadLeft  = 100;  % mm new ������ ��������
+ShiftRadLeft  = 100;  % mm new
 ShiftRadRight = 100;  % mm new
 
 RollAdd       = 24;   % mm
 CutAdd        = 12;   % mm
-CutRadTurn    = 0;    % grad new
+CutRadTurn    = 0.5;    % grad new
 CutRadShift   = 0;    % mm   new
 CutTurnShift  = 100;  % mm   new
 
@@ -153,6 +153,7 @@ RlSC = [-(Ors*sind(CutRadTurn))                            CutTurnShift+Ors*cosd
 
 OSr  = sqrt(RlSA(1)*RlSA(1) + RlSA(2)*RlSA(2));
 OSra = atand(RlSA(1)/RlSA(2));
+OSrb = 60-OSra;
 
 dx = RollAdd*s3/2;                                    % cut-roll delta x
 dy = RollAdd/2;                                       % cut-roll delta
@@ -666,7 +667,7 @@ elseif(CutType == 1)
 end
 %***********************11. Half angel**************************
 st_d = ang + dAlfa;
-en_d = 300;
+en_d = 300+OSrb;
 VelPoint(3)= CurAng; %3-rd input
 opi = 1;
 for ang = st_d:dAlfa:en_d
@@ -683,7 +684,7 @@ LoadBar(BarMax,BarCur);
 CurAng = CurAng - 1;
 %alfffLeft = atand(TranzA12(2)/TranzA12(1)) - atand(TranzA11(2)/TranzA11(1))
 
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,OSr,OSra);
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,OSr,OSra,CtA1,CtB1);
 for i = 1:1:TR_End
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
@@ -717,7 +718,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 1)
+if (plotWork == 0)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
@@ -740,7 +741,7 @@ for i = 1:1:CurAng-1
     Betta(i)     = Betta(i)    - norm_al;
     OUT_Bx(i)    = OUT_Bx(i)   - norm_bx;
     %************************************
-    OUT_Bx(i)    = 0 - OUT_Bx(i);
+    %OUT_Bx(i)    = 0 - OUT_Bx(i);
     %************************************
     OUT_Bang(i)  = OUT_Bang(i) - norm_ba;
     if (InvertRotate == 1)
@@ -812,7 +813,7 @@ for i = 1:1:TR_End
     TR_Alfa(i) = TR_Alfa(i) - norm_al; %
     TR_Bx(i)   = TR_Bx(i)   - norm_bx;
     %************************************
-    TR_Bx(i)   = 0 - TR_Bx(i);
+    %TR_Bx(i)   = 0 - TR_Bx(i);
     %************************************
     TR_Bang(i) = TR_Bang(i) - norm_ba;
     if (InvertRotate == 1)
