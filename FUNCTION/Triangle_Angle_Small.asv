@@ -56,7 +56,6 @@ By    = 0:1:(nAlfa-dAlfa);          % Position dot B on OY
 Bang  = 0:1:(nAlfa-dAlfa);          % Angel of car in grad
 Betta = 0:1:(nAlfa-dAlfa);      		% Current angel
 Simb  = 0:1:(nAlfa-dAlfa);
-Alfa  = Str:dAlfa:(Str+360-dAlfa);	% Turn angle
 %***************************************************************
 %***************************************************************
 %***************************************************************
@@ -213,10 +212,11 @@ for ang = st_d:dAlfa:en_d
 end
 
 %LEFT CONER
-st_d = en_d;
-en_d = st_d+RadiusHalfLeft-dAlfa;
+st_d   = en_d;
+en_d   = st_d+RadiusHalfLeft-dAlfa;
+angCon = en_d;
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,120-OSra,0,0,0);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,0);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
@@ -225,7 +225,7 @@ end
 st_d = en_d;
 en_d = st_d+RadiusHalfRight-dAlfa;
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,120-OSra,0,0,1);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,1);
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
@@ -309,19 +309,43 @@ for ang = st_d:dAlfa:en_d
 end
 
 %LEFT CONER
-st_d = en_d;
-en_d = st_d+RadiusHalfLeft;
+st_d    = en_d;
+realEnd = 0;
+angCon = 180+OSrb;
+if (en_d+RadiusHalfLeft-dAlfa > 180)
+    realEnd = st_d+RadiusHalfLeft-dAlfa;
+    en_d = 180;
+else
+    en_d = st_d+RadiusHalfLeft-dAlfa;
+end
+
+
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,240-OSra,0,0,0);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,0);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
 
+if (realEnd ~= 0)
+    st_d = en_d+dAlfa;
+    en_d = realEnd;
+    for ang = st_d:dAlfa:en_d
+        [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,1,1,1);
+        Ax(CurAng) = -Ax(CurAng);
+        Simb(CurAng)  = 1;
+        CurAng        = CurAng + 1;
+    end
+end
 %RIGHT CONER
-st_d = en_d;
-en_d = st_d + RadiusHalfRight;
+st_d = en_d-dAlfa;
+if (st_d <180)
+   "YES"
+else
+    en_d = st_d+RadiusHalfRight-dAlfa;
+end
+
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,240-OSra,1,1,1);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,1,1,1);
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
@@ -415,7 +439,9 @@ end
 %***************************************************************
 %**********************DATA OUTPUT******************************
 %***************************************************************
+Alfa  = Str:dAlfa:(Str+360-dAlfa);	% Turn angle
 End = CurAng-1;
+Alfa  = Str:dAlfa:End;	% Turn angle
 if DebugPlot == 1
     subplot(1,1,1);
     plot(Alfa(1:CurAng-1), Bang(1:CurAng-1), Alfa(1:CurAng-1), Bx(1:CurAng-1));

@@ -302,6 +302,8 @@ sdel = sd+CutRad-sr;
 sbet = atand(sx/sy);
 BisxCut = BisxCut + sdel;
 %***********************ANGLE***********************************
+len = sqrt(RlSA(1)*RlSA(1)+RlSA(2)*RlSA(2))+CutRad;
+
 g      = Blank_h*2 - BisxCut;
 FCA_r  = g/(2*cosd(CIA)-1);
 FCA_or = BisxCut-FCA_r;
@@ -666,16 +668,37 @@ elseif(CutType == 1)
     LoadBar(BarMax,BarCur);
 end
 %***********************11. Half angel**************************
+
+
+
+
+
 st_d = ang + dAlfa;
-en_d = 300+OSrb;
+en_d = 300;
+VelPoint(3)= CurAng; %3-rd input
+opi = 0;
+for ang = st_d:dAlfa:en_d
+    Betta(CurAng) = ang;
+    [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,1,1,0);
+    DrawSim(CurAng) = 1;
+    CurAng = CurAng + 1;
+end
+
+st_d = ang + dAlfa;
+en_d = st_d+OSrb;
 VelPoint(3)= CurAng; %3-rd input
 opi = 1;
 for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
-    [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,opi,1,0);
+    [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,1,1,0);
+    OUT_Ax(CurAng) = -OUT_Ax(CurAng);
+    OUT_Bx(CurAng) = -OUT_Bx(CurAng);
     DrawSim(CurAng) = 1;
     CurAng = CurAng + 1;
 end
+
+
+
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
 %***************************************************************
@@ -685,7 +708,9 @@ CurAng = CurAng - 1;
 %alfffLeft = atand(TranzA12(2)/TranzA12(1)) - atand(TranzA11(2)/TranzA11(1))
 
 [TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,OSr,OSra,CtA1,CtB1);
+
 for i = 1:1:TR_End
+    %CurAng+i
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
     OUT_Ay(CurAng+i)   = TR_Ay(i);
@@ -718,7 +743,7 @@ for i = 1:1:CurAng-1
    xx(i)  = rhi(i)*cosd(rho(i));
    yy(i)  = rhi(i)*sind(rho(i));
 end
-if (plotWork == 0)
+if (plotWork == 1)
     line(xx(1:CurAng-1),yy(1:CurAng-1)); %,'Marker','square'
 end
 BarCur = BarCur + 1;
