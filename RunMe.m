@@ -26,16 +26,14 @@ SimbSize      = 921;  % mm
 SimbRad       = 51;   % mm
 CutRad        = 69;   % mm
 
-ShiftLenLeft  = 45;   % mm new.
+ShiftLenLeft  = 45;   % mm new �� ������� ������ ������� ����� ����������� ������
 ShiftLenRight = 45;   % mm new
-ShiftRadLeft  = 100;  % mm new
+ShiftRadLeft  = 100;  % mm new ������ ��������
 ShiftRadRight = 100;  % mm new
-
-CutFirstSecondDist = 0;
 
 RollAdd       = 24;   % mm
 CutAdd        = 12;   % mm
-CutRadTurn    = 0.5;    % grad new
+CutRadTurn    = 0;    % grad new
 CutRadShift   = 0;    % mm   new
 CutTurnShift  = 100;  % mm   new
 
@@ -155,7 +153,6 @@ RlSC = [-(Ors*sind(CutRadTurn))                            CutTurnShift+Ors*cosd
 
 OSr  = sqrt(RlSA(1)*RlSA(1) + RlSA(2)*RlSA(2));
 OSra = atand(RlSA(1)/RlSA(2));
-OSrb = 60-OSra;
 
 dx = RollAdd*s3/2;                                    % cut-roll delta x
 dy = RollAdd/2;                                       % cut-roll delta
@@ -304,10 +301,6 @@ sdel = sd+CutRad-sr;
 sbet = atand(sx/sy);
 BisxCut = BisxCut + sdel;
 %***********************ANGLE***********************************
-len = sqrt(RlSA(1)*RlSA(1)+RlSA(2)*RlSA(2))+CutRad+CutFirstSecondDist;
-fca = linspace(0,360);
-line(len*cosd(fca),len*sind(fca),'Color','red');
-
 g      = Blank_h*2 - BisxCut;
 FCA_r  = g/(2*cosd(CIA)-1);
 FCA_or = BisxCut-FCA_r;
@@ -322,9 +315,9 @@ if (PlotFirstCutTest == 1)
     FCA_tA = linspace(150+CIA,270-CIA);
     FCA_tB = linspace(270+CIA,390-CIA);
     FCA_tC = linspace(30+CIA, 150-CIA);
-    %line(FCA_r*cosd(FCA_tA)+FCA_A(1),FCA_r*sind(FCA_tA)+FCA_A(2),'Color','red');
-    %line(FCA_r*cosd(FCA_tB)+FCA_B(1),FCA_r*sind(FCA_tB)+FCA_B(2),'Color','red');
-    %line(FCA_r*cosd(FCA_tC)+FCA_C(1),FCA_r*sind(FCA_tC)+FCA_C(2),'Color','red');
+    line(FCA_r*cosd(FCA_tA)+FCA_A(1),FCA_r*sind(FCA_tA)+FCA_A(2),'Color','red');
+    line(FCA_r*cosd(FCA_tB)+FCA_B(1),FCA_r*sind(FCA_tB)+FCA_B(2),'Color','red');
+    line(FCA_r*cosd(FCA_tC)+FCA_C(1),FCA_r*sind(FCA_tC)+FCA_C(2),'Color','red');
 end
 %************************SIDE***********************************
 if (CutType == 0)                       % Calc for normal situation
@@ -338,9 +331,9 @@ if (CutType == 0)                       % Calc for normal situation
     FCR_tB = linspace(210-CIA,210+CIA);
     FCR_tC = linspace(-30-CIA,-30+CIA);
     if (PlotFirstCutTest == 1)
-        %line(FSCR*cosd(FCR_tA)+FCR_A(1),FSCR*sind(FCR_tA)+FCR_A(2),'Color','red');
-        %line(FSCR*cosd(FCR_tB)+FCR_B(1),FSCR*sind(FCR_tB)+FCR_B(2),'Color','red');
-        %line(FSCR*cosd(FCR_tC)+FCR_C(1),FSCR*sind(FCR_tC)+FCR_C(2),'Color','red');
+        line(FSCR*cosd(FCR_tA)+FCR_A(1),FSCR*sind(FCR_tA)+FCR_A(2),'Color','red');
+        line(FSCR*cosd(FCR_tB)+FCR_B(1),FSCR*sind(FCR_tB)+FCR_B(2),'Color','red');
+        line(FSCR*cosd(FCR_tC)+FCR_C(1),FSCR*sind(FCR_tC)+FCR_C(2),'Color','red');
     end
 end
 %***********************TRAVEL**********************************
@@ -364,12 +357,12 @@ if (CutType == 0)
     FCT_tC1 = linspace(150-CIA,150+CIA);
     FCT_tC2 = linspace(30-CIA, 30 +CIA);
     if (PlotFirstCutTest == 1)
-        %line(FCT_r*cosd(FCT_tA1)+FCT_A1(1),FCT_r*sind(FCT_tA1)+FCT_A1(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tB1)+FCT_B1(1),FCT_r*sind(FCT_tB1)+FCT_B1(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tB2)+FCT_B2(1),FCT_r*sind(FCT_tB2)+FCT_B2(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tA2)+FCT_A2(1),FCT_r*sind(FCT_tA2)+FCT_A2(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tC1)+FCT_C1(1),FCT_r*sind(FCT_tC1)+FCT_C1(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tC2)+FCT_C2(1),FCT_r*sind(FCT_tC2)+FCT_C2(2),'Color','red');
+        line(FCT_r*cosd(FCT_tA1)+FCT_A1(1),FCT_r*sind(FCT_tA1)+FCT_A1(2),'Color','red');
+        line(FCT_r*cosd(FCT_tB1)+FCT_B1(1),FCT_r*sind(FCT_tB1)+FCT_B1(2),'Color','red');
+        line(FCT_r*cosd(FCT_tB2)+FCT_B2(1),FCT_r*sind(FCT_tB2)+FCT_B2(2),'Color','red');
+        line(FCT_r*cosd(FCT_tA2)+FCT_A2(1),FCT_r*sind(FCT_tA2)+FCT_A2(2),'Color','red');
+        line(FCT_r*cosd(FCT_tC1)+FCT_C1(1),FCT_r*sind(FCT_tC1)+FCT_C1(2),'Color','red');
+        line(FCT_r*cosd(FCT_tC2)+FCT_C2(1),FCT_r*sind(FCT_tC2)+FCT_C2(2),'Color','red');
     end
 elseif(CutType == 1)
     FCT_a  = FCA_r*2*sind(60-CIA);
@@ -388,9 +381,9 @@ elseif(CutType == 1)
         FCT_tA = linspace(150-CIA,150+CIA);
         FCT_tB = linspace(30 -CIA, 30+CIA);
         FCT_tC = linspace(-90-CIA,-90+CIA);
-        %line(FCT_r*cosd(FCT_tA)+FCT_A(1),FCT_r*sind(FCT_tA)+FCT_A(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tB)+FCT_B(1),FCT_r*sind(FCT_tB)+FCT_B(2),'Color','red');
-        %line(FCT_r*cosd(FCT_tC)+FCT_C(1),FCT_r*sind(FCT_tC)+FCT_C(2),'Color','red');
+        line(FCT_r*cosd(FCT_tA)+FCT_A(1),FCT_r*sind(FCT_tA)+FCT_A(2),'Color','red');
+        line(FCT_r*cosd(FCT_tB)+FCT_B(1),FCT_r*sind(FCT_tB)+FCT_B(2),'Color','red');
+        line(FCT_r*cosd(FCT_tC)+FCT_C(1),FCT_r*sind(FCT_tC)+FCT_C(2),'Color','red');
     end
 end
 FCT_OO = FCT_a/tand(CIA) - Blank_h;
@@ -461,7 +454,7 @@ if (CutType == 0)
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,0,opi,1,1);
         OUT_Bx(CurAng) = -OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -475,7 +468,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -493,7 +486,7 @@ for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
     [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,60,opi,0,0);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 st_d    = ang + dAlfa;
 en_d    = FCA_end_tb_ang-dAlfa;
@@ -501,13 +494,13 @@ ang_d   = 1;
 CurSide = CurSide + 1;
 for ang = st_d:dAlfa:en_d
     Betta(CurAng)    = ang;
-    %OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
-    %OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
-    %OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
-    %OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
+    OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
+    OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
+    OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
+    OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
     OUT_By(CurAng)   = 0;
     DrawSim(CurAng)  = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
     ang_d  = ang_d  + 1;
 end
 BarCur = BarCur + 1;
@@ -522,7 +515,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -536,7 +529,7 @@ if (CutType == 0)
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,120,opi,1,1);
         OUT_Bx(CurAng)=-OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -549,7 +542,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
 %************************4,5,6 Trevel***************************
 elseif(CutType == 1)
@@ -562,7 +555,7 @@ elseif(CutType == 1)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     st_d    = ang + dAlfa;
     en_d    = st_d + FCT_tb_ang;
@@ -572,7 +565,7 @@ elseif(CutType == 1)
         Betta(CurAng)   = ang;
 	      [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 3;
     LoadBar(BarMax,BarCur);
@@ -586,20 +579,20 @@ for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
     [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,180,opi,0,0);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 st_d    = ang + dAlfa;
 en_d    = st_d + FCA_tb_ang/2-dAlfa;
 ang_d   = 1;
 for ang = st_d:dAlfa:en_d
     Betta(CurAng)    = ang;
-    %OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
-    %OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
-    %OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
-    %OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
+    OUT_Ax(CurAng)   = OUT_Ax(CurAng-ang_d*2);
+    OUT_Ay(CurAng)   = -OUT_Ay(CurAng-ang_d*2);
+    OUT_Bx(CurAng)   = OUT_Bx(CurAng-ang_d*2);
+    OUT_Bang(CurAng) = -OUT_Bang(CurAng-ang_d*2);
     OUT_By(CurAng)   = 0;
     DrawSim(CurAng)  = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
     ang_d  = ang_d  + 1;
 end
 BarCur = BarCur + 1;
@@ -614,7 +607,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -628,7 +621,7 @@ if (CutType == 0)
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCR_or,FSCR,L,0,60,opi,1,0);
         OUT_Bx(CurAng)=-OUT_Bx(CurAng);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -641,7 +634,7 @@ if (CutType == 0)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,0,0);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 1;
     LoadBar(BarMax,BarCur);
@@ -656,7 +649,7 @@ elseif(CutType == 1)
         Betta(CurAng) = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,1);
         DrawSim(CurAng) = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     st_d    = ang + dAlfa;
     en_d    = st_d + FCT_tb_ang;
@@ -666,75 +659,32 @@ elseif(CutType == 1)
         Betta(CurAng)    = ang;
         [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCT_or,FCT_r,L,1,FCT_ang,opi,1,0);
         DrawSim(CurAng)  = 1;
-        %CurAng = CurAng + 1;
+        CurAng = CurAng + 1;
     end
     BarCur = BarCur + 3;
     LoadBar(BarMax,BarCur);
 end
 %***********************11. Half angel**************************
-
-
-
-
-
 st_d = ang + dAlfa;
 en_d = 300;
-VelPoint(3)= CurAng; %3-rd input
-opi = 0;
-for ang = st_d:dAlfa:en_d
-    Betta(CurAng) = ang;
-    [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,1,1,0);
-    DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
-end
-
-st_d = ang + dAlfa;
-en_d = st_d+OSrb;
 VelPoint(3)= CurAng; %3-rd input
 opi = 1;
 for ang = st_d:dAlfa:en_d
     Betta(CurAng) = ang;
-    [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,1,1,0);
-    OUT_Ax(CurAng) = -OUT_Ax(CurAng);
-    OUT_Bx(CurAng) = -OUT_Bx(CurAng);
+    [OUT_Bang(CurAng),OUT_Ax(CurAng),OUT_Ay(CurAng),OUT_Bx(CurAng),OUT_By(CurAng)] = CutCircle(ang,FCA_or,FCA_r,L,1,300,opi,1,0);
     DrawSim(CurAng) = 1;
-    %CurAng = CurAng + 1;
+    CurAng = CurAng + 1;
 end
 BarCur = BarCur + 1;
 LoadBar(BarMax,BarCur);
-%***************************************************************
-%***************************************************************
-%***************************************************************
-CurAng = 1;
-
-firstCutStart = acosd(Blank_h/len);
-firstCutEnd   = 300+OSrb;
-for ang = firstCutStart:dAlfa:firstCutEnd
-   Betta(CurAng) = ang;
-   OUT_Bang(CurAng) = 0;
-   OUT_Ax(CurAng)   = len;
-   OUT_Ay(CurAng)   = 0;
-   OUT_Bx(CurAng)   = len+L;
-   OUT_By(CurAng)   = 0;
-   CurAng = CurAng + 1;
-end
-%***************************************************************
-%***************************************************************
-%***************************************************************
-
-
-
-
 %***************************************************************
 %*************************SECOND CUT****************************
 %***************************************************************
 CurAng = CurAng - 1;
 %alfffLeft = atand(TranzA12(2)/TranzA12(1)) - atand(TranzA11(2)/TranzA11(1))
 
-[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,OSr,OSra,CtA1,CtB1);
-
+[TR_Bang,TR_Ax,TR_Ay,TR_Bx,TR_By,TR_Alfa,TR_End,TR_Sim] = Triangle_Angle_Small(CutSimbSize,CutRad,L,dAlfa,Betta(CurAng),SimbRad,SimbSize,alfLeft,alfRight,ShiftLenLeft,ShiftLenRight,AdBLeft,AdARight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,ShiftRadLeft,ShiftRadRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,OSr,OSra);
 for i = 1:1:TR_End
-    %CurAng+i
     OUT_Bang(CurAng+i) = TR_Bang(i);
     OUT_Ax(CurAng+i)   = TR_Ax(i);
     OUT_Ay(CurAng+i)   = TR_Ay(i);
@@ -790,7 +740,7 @@ for i = 1:1:CurAng-1
     Betta(i)     = Betta(i)    - norm_al;
     OUT_Bx(i)    = OUT_Bx(i)   - norm_bx;
     %************************************
-    %OUT_Bx(i)    = 0 - OUT_Bx(i);
+    OUT_Bx(i)    = 0 - OUT_Bx(i);
     %************************************
     OUT_Bang(i)  = OUT_Bang(i) - norm_ba;
     if (InvertRotate == 1)
@@ -862,7 +812,7 @@ for i = 1:1:TR_End
     TR_Alfa(i) = TR_Alfa(i) - norm_al; %
     TR_Bx(i)   = TR_Bx(i)   - norm_bx;
     %************************************
-    %TR_Bx(i)   = 0 - TR_Bx(i);
+    TR_Bx(i)   = 0 - TR_Bx(i);
     %************************************
     TR_Bang(i) = TR_Bang(i) - norm_ba;
     if (InvertRotate == 1)

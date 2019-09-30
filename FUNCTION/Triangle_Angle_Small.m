@@ -1,4 +1,4 @@
-function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = Triangle_Angle_Small(Size,R,L,dAlfa,Str,R2,Size2,alfLeft,alfRight,shiftLeft,shiftRight,OtLeft,OtRight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,AdRLeft,AdRRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,Or,OSra,CtA1,CtB1)
+function [Bang,Ax,Ay,Bx,By,Alfa,End,Simb] = Triangle_Angle_Small(Size,R,L,dAlfa,Str,R2,Size2,alfLeft,alfRight,shiftLeft,shiftRight,OtLeft,OtRight,hTranzRight,hTranzLeft,AdOOLeft,AdOORight,AdRLeft,AdRRight,tcapLeft,tcapRight,TranzA11,TranzA12,TranzB11,TranzB12,Or,OSra)
 %***************************************************************
 %**************************DEBUG********************************
 %***************************************************************
@@ -47,7 +47,7 @@ TriangleRenge = 0:1:TriangleRengeNom;  	 		% Mass triangle ranges initalistion
 %HalfStreghtAngleRange = 0;              		% Range of the half of streght part of simbol
 RadiusAngleRange = 0;                   		%
 %***************************************************************
-%*************************OUTPUT********************************
+%*************************OUTPUT***s*****************************
 %***************************************************************
 Ax    = 0:1:(nAlfa-dAlfa);          % Position dot A on OX
 Ay    = 0:1:(nAlfa-dAlfa);          % Position dot A on OY
@@ -56,6 +56,7 @@ By    = 0:1:(nAlfa-dAlfa);          % Position dot B on OY
 Bang  = 0:1:(nAlfa-dAlfa);          % Angel of car in grad
 Betta = 0:1:(nAlfa-dAlfa);      		% Current angel
 Simb  = 0:1:(nAlfa-dAlfa);
+Alfa  = Str:dAlfa:(Str+360-dAlfa);	% Turn angle
 %***************************************************************
 %***************************************************************
 %***************************************************************
@@ -75,13 +76,10 @@ Simb  = 0:1:(nAlfa-dAlfa);
 %***************************************************************
 RadiusAngleRangeLeft       = 120 - 2*(atand(ALeft/(L+h)));
 RadiusAngleRangeRight      = 120 - 2*(atand(ARight/(L+h)));
-
-HalfStreghtAngleRangeLeft  = atand((-CtA1(1))/(L+h));
-HalfStreghtAngleRangeRight = atand(CtB1(1)/(L+h));
+HalfStreghtAngleRangeLeft  = ((360 - 3*RadiusAngleRangeLeft)/6);
+HalfStreghtAngleRangeRight = ((360 - 3*RadiusAngleRangeRight)/6);
 %****
-%Ok
 TranzitAngleRangeLeft  = atand((OtLeft(1)+(AdRLeft+L)*sind(tcapLeft))/(h-AdRLeft+(AdRLeft+L)*cosd(tcapLeft)))-HalfStreghtAngleRangeLeft;
-%Ok
 TranzitAngleRangeRight = atand((-OtRight(1)+(AdRRight+L)*sind(tcapRight))/(h-AdRRight+(AdRRight+L)*cosd(tcapRight)))-HalfStreghtAngleRangeRight;
 
 TarnzitAngleShiftAngLeft  = atand(OtLeft(1)/OtLeft(2));
@@ -95,13 +93,12 @@ LineAngRangeRight = atand(CRight(2)/CRight(1))-atand(DRight(2)/DRight(1));
 
 tettLeft          = atand((TranzB12(2)-TranzB11(2))/(TranzB12(1)-TranzB11(1)));
 lenLeft           = sqrt((TranzB12(2)-TranzB11(2))*(TranzB12(2)-TranzB11(2)) + (TranzB12(1)-TranzB11(1))*(TranzB12(1)-TranzB11(1)) );
-CLeft             = [TranzB11(1)+L*sind(tettLeft)  TranzB11(2)-L*cosd(tettLeft)];
+CLeft             = [TranzB11(1)+L*sind(tettRight)  TranzB11(2)-L*cosd(tettRight)];
 DLeft             = [CLeft(1)+lenLeft*cosd(tettLeft) CLeft(2)+ lenLeft*sind(tettLeft)];
 LineAngRangeLeft  = atand(DLeft(2)/DLeft(1))-atand(CLeft(2)/CLeft(1));
 
-OSrb = (60-OSra);
-RadiusHalfLeft    = 60 - LineAngRangeLeft - TranzitAngleRangeLeft-HalfStreghtAngleRangeLeft+OSrb;
-RadiusHalfRight   = 60 - LineAngRangeRight - TranzitAngleRangeRight-HalfStreghtAngleRangeRight-OSrb;
+RadiusHalfLeft    = 60 - LineAngRangeLeft - TranzitAngleRangeLeft-HalfStreghtAngleRangeLeft;
+RadiusHalfRight   = 60 - LineAngRangeRight - TranzitAngleRangeRight-HalfStreghtAngleRangeRight;
 %****
 TriangleRenge(1)  = 0;                                          % Start point
 TriangleRenge(2)  = HalfStreghtAngleRangeLeft;                  % The end of first part
@@ -113,18 +110,16 @@ TriangleRenge(7)  = TriangleRenge(6) + HalfStreghtAngleRangeRight;
 TriangleRenge(8)  = TriangleRenge(7) + HalfStreghtAngleRangeLeft;
 TriangleRenge(9)  = TriangleRenge(8) + RadiusAngleRangeLeft;				%?????????
 TriangleRenge(10) = TriangleRenge(9) + HalfStreghtAngleRangeRight;   % Stop point
-
-
 %***************************************************************
 %********************MAIN CALCULATION***************************
 %***************************************************************
 
 %********************ANGLE PART 8->9****************************
 %RIGHT
-st_d = -60+OSrb;
+st_d = -60;
 en_d = st_d + RadiusHalfRight - dAlfa; %TranzitAngleRangeRight
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,-60+OSrb,0,0,1);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,-OSra,0,0,1);
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
@@ -156,9 +151,7 @@ for ang = st_d:dAlfa:en_d
     CurAng = CurAng + 1;
 end
 %********************STREGHT PART 9->10**************************
-st_d = 0;
-en_d = -en_d;
-for ang = st_d:dAlfa:en_d
+for ang = 0:dAlfa:(HalfStreghtAngleRangeRight-dAlfa)
 	AAd           = (h + L)*tand(HalfStreghtAngleRangeRight-ang);
     Ay(CurAng)    = -L*sind(HalfStreghtAngleRangeRight-ang);
     Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
@@ -170,9 +163,7 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 %********************STREGHT PART 1->2**************************
-st_d = 0;
-en_d = HalfStreghtAngleRangeLeft-dAlfa;
-for ang = st_d:dAlfa:en_d
+for ang = 0:dAlfa:(HalfStreghtAngleRangeLeft-dAlfa)
     AAd = (h + L)*tand(ang);
     Ay(CurAng)    = L*sind(ang);
     Ax(CurAng)    = sqrt(h*h + AAd*AAd - Ay(CurAng)*Ay(CurAng));
@@ -211,21 +202,17 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 
-%LEFT CONER
-st_d   = en_d;
-en_d   = st_d+RadiusHalfLeft-dAlfa;
-angCon = en_d;
-for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,0);
+for ang = en_d:dAlfa:(60-dAlfa)
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,120-OSra,0,0,0);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
 
-%RIGHT CONER
-st_d = en_d;
+%RIGHT
+st_d = 60;
 en_d = st_d+RadiusHalfRight-dAlfa;
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,1);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,120-OSra,0,0,1);
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
@@ -308,54 +295,17 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 
-%LEFT CONER
-st_d    = en_d;
-realEnd = 0;
-angCon = 180+OSrb;
-if (en_d+RadiusHalfLeft-dAlfa > 180)
-    realEnd = st_d+RadiusHalfLeft-dAlfa;
-    en_d = 180;
-else
-    en_d = st_d+RadiusHalfLeft-dAlfa;
-end
-
-
-for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,0);
+for ang = en_d:dAlfa:(180-dAlfa)
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,240-OSra,0,0,0);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
 end
 
-if (realEnd ~= 0)
-    st_d = en_d+dAlfa;
-    en_d = realEnd;
-    for ang = st_d:dAlfa:en_d
-        [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,1,1,1);
-        Ax(CurAng) = -Ax(CurAng);
-        Simb(CurAng)  = 1;
-        CurAng        = CurAng + 1;
-    end
-end
-%RIGHT CONER
-realEnd = 0;
-st_d = en_d-dAlfa;
-if (st_d <180)
-   realEnd = st_d+RadiusHalfRight-dAlfa;
-   en_d    = 180;
-   for ang = st_d:dAlfa:en_d
-        [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,0,0,0);
-        Ax(CurAng) = -Ax(CurAng);
-        Simb(CurAng) = 1;
-        CurAng       = CurAng + 1;
-   end
-   st_d = en_d+dAlfa;
-   en_d = realEnd;
-else
-    en_d = st_d+RadiusHalfRight-dAlfa;
-end
-
+%RIGHT
+st_d = 180+dAlfa;
+en_d = st_d + RadiusHalfRight-dAlfa;
 for ang = st_d:dAlfa:en_d
-    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,angCon,1,1,1);
+    [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,240-OSra,1,1,1);
     Simb(CurAng) = 1;
     CurAng       = CurAng + 1;
 end
@@ -438,10 +388,8 @@ for ang = st_d:dAlfa:en_d
     CurAng        = CurAng + 1;
 end
 
-%LEFT  CONER
-st_d = en_d;
-en_d = st_d+RadiusHalfLeft+dAlfa;
-for ang = st_d:dAlfa:en_d
+temp = (TriangleRenge(9) - TriangleRenge(8))/2;
+for ang = (en_d+dAlfa):dAlfa:(300-dAlfa)
     [Bang(CurAng),Ax(CurAng),Ay(CurAng),Bx(CurAng),By(CurAng)] = CutCircle(ang,Or,R,L,1,360-OSra,1,1,0);
     Simb(CurAng)  = 1;
     CurAng        = CurAng + 1;
@@ -449,9 +397,7 @@ end
 %***************************************************************
 %**********************DATA OUTPUT******************************
 %***************************************************************
-Alfa  = Str:dAlfa:(Str+360-dAlfa);	% Turn angle
 End = CurAng-1;
-Alfa  = Str:dAlfa:End;	% Turn angle
 if DebugPlot == 1
     subplot(1,1,1);
     plot(Alfa(1:CurAng-1), Bang(1:CurAng-1), Alfa(1:CurAng-1), Bx(1:CurAng-1));
